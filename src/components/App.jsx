@@ -8,16 +8,46 @@ export default class App extends React.Component {
 
     this.state = {
       filters: {
-        sort_by: "vote_average.asc"
+        sort_by: "vote_average.asc",
+        primary_release_year: 2019,
+        with_genres: ""
       },
       page: 1
     };
   }
 
   onChangeFilters = (event) => {
+    console.log(event.target.name)
+    console.log(event.target.value)
     const newFilters = {
       ...this.state.filters,
       [event.target.name]: event.target.value
+    }
+    this.setState({
+      filters: newFilters
+    })
+  }
+
+  onChangeFiltersGenre = (genreId) => {
+    console.log(`genreId`, genreId)
+    let newWithGenres = this.state.filters.with_genres;
+    let arrayOfString = newWithGenres.split(',');
+    console.log(arrayOfString);
+    let idx = arrayOfString.findIndex(el=>parseInt(genreId)===parseInt(el));
+
+    console.log(idx);
+    if (idx > -1) {
+      arrayOfString.splice(idx,1);
+      newWithGenres = arrayOfString.join(',')
+    } else {
+      newWithGenres = newWithGenres + genreId + ',';
+    }
+     
+    
+    
+    const newFilters = {
+      ...this.state.filters,
+      with_genres: newWithGenres
     }
     this.setState({
       filters: newFilters
@@ -29,6 +59,18 @@ export default class App extends React.Component {
       page
     });
   };
+
+  setDefaultFilters = () => {
+    console.log(`Set Default Filters`)
+    this.setState({
+      filters: {
+        sort_by: "vote_average.asc",
+        primary_release_year: 2019,
+        with_genres: ""
+      },
+      page: 1
+    })
+  }
 
   render() {
     const {filters, page} = this.state;
@@ -44,6 +86,8 @@ export default class App extends React.Component {
                   filters={filters} 
                   onChangeFilters={this.onChangeFilters}
                   onChangePage={this.onChangePage}
+                  onChangeFiltersGenre={this.onChangeFiltersGenre}
+                  setDefaultFilters={this.setDefaultFilters}
                 />
               </div>
             </div>
@@ -52,7 +96,7 @@ export default class App extends React.Component {
             <MoviesList 
               filters={filters} 
               page={page} 
-              onChangePage={this.onChangePage} 
+              onChangePage={this.onChangePage}
             />
           </div>
         </div>
