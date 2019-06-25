@@ -43,8 +43,6 @@ export default class App extends React.Component {
       newWithGenres = newWithGenres + genreId + ',';
     }
      
-    
-    
     const newFilters = {
       ...this.state.filters,
       with_genres: newWithGenres

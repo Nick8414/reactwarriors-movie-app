@@ -1,4 +1,5 @@
 import React from 'react';
+import GenreItem from './GenreItem';
 import { API_URL, API_KEY_3 } from "../../api/api";
 
 export default class Genres extends React.Component {
@@ -36,12 +37,12 @@ export default class Genres extends React.Component {
   };
 
   onChangeGenre = event => {
+    const { name, value, checked } = event.target;
     const {onChangeFiltersGenre} = this.props;
-    const idx = this.state.genres.findIndex(el=>el.id === parseInt(event.target.value));
     const newGenres = [...this.state.genres];
 
-    newGenres[idx].checked = event.target.checked;
-    onChangeFiltersGenre(parseInt(event.target.value));
+    newGenres[name].checked = checked;
+    onChangeFiltersGenre(parseInt(value));
 
     this.setState({
       genres: newGenres
@@ -64,23 +65,13 @@ export default class Genres extends React.Component {
         <div>Жанр:</div>
         <div className="form-check">
           {
-            this.state.genres.map(genre => {
+            this.state.genres.map((genre, idx) => {
               return (
-                <div key={genre.id}className="form-check">
-                  <input 
-                    className="form-check-input" 
-                    type="checkbox"
-                    name="with_genres"
-                    id={genre.id}
-                    value={genre.id}
-                    checked={genre.checked}
-                    onChange={this.onChangeGenre}
-                  />
-                  <label 
-                    className="form-check-label" 
-                    htmlFor={genre.id}
-                  >{genre.name}</label>
-                </div>
+                <GenreItem 
+                  genre={genre}
+                  onChangeGenre={this.onChangeGenre}
+                  index={idx}
+                />
               )
             })
           }

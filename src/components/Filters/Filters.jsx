@@ -1,11 +1,12 @@
 import React from "react";
 import SortBy from "./SortBy";
 import ReleaseYear from "./ReleaseYear";
-import Genres from "./Genres";
+import Genres from "../Genres/GenresList";
 
 export default class Filters extends React.Component {
   render() {
-    const { filters:{sort_by, primary_release_year, with_genres}, onChangeFilters, setDefaultFilters, onChangePage, onChangeFiltersGenre, page } = this.props;
+    const { filters:{sort_by, primary_release_year, with_genres}, onChangeFilters, setDefaultFilters, 
+                      onChangePage, onChangeFiltersGenre, page } = this.props;
     return (
       <form className="mb-3">
         <SortBy 
@@ -21,7 +22,14 @@ export default class Filters extends React.Component {
           onChangeFiltersGenre={onChangeFiltersGenre}
         />
         <div className="btn-group">
-          <button type="button" className="btn btn-light" disabled={page===1}  onClick={()=>{onChangePage(page - 1)}}>Назад</button>
+          <button 
+            type="button" 
+            className="btn btn-light" 
+            disabled={page===1}  
+            onClick={()=>{onChangePage(page - 1)}}
+          >
+            Назад
+          </button>
           {/* onClick={onChangePage.bind(null, page - 1)} */}
           <button type="button" className="btn btn-light" onClick={()=>{onChangePage(page + 1)}} >Вперед</button>
           <button type="button" className="btn btn-light" onClick={setDefaultFilters} >Сбросить фильтры</button>
