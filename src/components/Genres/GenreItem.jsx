@@ -1,7 +1,7 @@
 import React from 'react';
 
 const GenreItem = (props) => {
-  const { genre, index, onChangeGenre } = props;
+  const { genre, index, onChangeGenre, checked } = props;
   return (
     <div key={genre.id}className="form-check">
       <input 
@@ -10,7 +10,7 @@ const GenreItem = (props) => {
         name={index}
         id={genre.id}
         value={genre.id}
-        checked={genre.checked}
+        checked={checked}
         onChange={onChangeGenre}
       />
       <label 

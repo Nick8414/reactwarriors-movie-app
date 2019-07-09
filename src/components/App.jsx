@@ -10,7 +10,7 @@ export default class App extends React.Component {
       filters: {
         sort_by: "vote_average.asc",
         primary_release_year: 2019,
-        with_genres: ""
+        with_genres: []
       },
       page: 1
     };
@@ -28,29 +28,41 @@ export default class App extends React.Component {
     })
   }
 
-  onChangeFiltersGenre = (genreId) => {
-    console.log(`genreId`, genreId)
-    let newWithGenres = this.state.filters.with_genres;
-    let arrayOfString = newWithGenres.split(',');
-    console.log(arrayOfString);
-    let idx = arrayOfString.findIndex(el=>parseInt(genreId)===parseInt(el));
+  // onChangeFiltersGenre = (genreId) => {
+  //    console.log(`genreId`, genreId)
+  //   // let newWithGenres = this.state.filters.with_genres;
+  //   // let arrayOfString = newWithGenres.split(',');
+  //   // console.log(arrayOfString);
+  //   // let idx = arrayOfString.findIndex(el=>parseInt(genreId)===parseInt(el));
 
-    console.log(idx);
-    if (idx > -1) {
-      arrayOfString.splice(idx,1);
-      newWithGenres = arrayOfString.join(',')
-    } else {
-      newWithGenres = newWithGenres + genreId + ',';
-    }
+  //   // console.log(idx);
+  //   // if (idx > -1) {
+  //   //   arrayOfString.splice(idx,1);
+  //   //   newWithGenres = arrayOfString.join(',')
+  //   // } else {
+  //   //   newWithGenres = newWithGenres + genreId + ',';
+  //   // }
      
-    const newFilters = {
-      ...this.state.filters,
-      with_genres: newWithGenres
-    }
-    this.setState({
-      filters: newFilters
-    })
-  }
+  //   // const newFilters = {
+  //   //   ...this.state.filters,
+  //   //   with_genres: newWithGenres
+  //   // }
+  //   // this.setState({
+  //   //   filters: newFilters
+  //   // })
+
+  //   const genresArray = [ ...this.state.filters.with_genres];
+  //   const updateGenres =  genresArray.includes(parseInt(genreId)) 
+  //                     ? genresArray.filter(genre => parseInt(genre) !== parseInt(genreId)) 
+  //                     : [...genresArray, parseInt(genreId)]
+  //   const newFilters = {
+  //     ...this.state.filters,
+  //     with_genres: updateGenres
+  //   }
+  //   this.setState({
+  //     filters: newFilters
+  //   })
+  // }
 
   onChangePage = (page) => {
     this.setState({

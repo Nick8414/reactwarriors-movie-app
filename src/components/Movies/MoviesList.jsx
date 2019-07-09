@@ -13,8 +13,10 @@ export default class MovieList extends Component {
 
   getMovies = (filters, page) => {
     const { sort_by, primary_release_year, with_genres } = filters;
+    const genresParams = with_genres.length>0 ? `&with_genres=${with_genres.join(',')}`:'';
+    
     const link = `${API_URL}/discover/movie?api_key=${API_KEY_3}&language=ru-RU&sort_by=${sort_by}&page=${page}
-                  &primary_release_year=${primary_release_year}${with_genres.length>0 ? `&with_genres=${with_genres}`:''}`;
+                  &primary_release_year=${primary_release_year}${genresParams}`;
     fetch(link)
       .then(response => {
         return response.json();
@@ -38,22 +40,27 @@ export default class MovieList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.filters.sort_by !== this.props.filters.sort_by) {
-      this.props.onChangePage(1);
-      this.getMovies(this.props.filters, 1);
-    }
+    // if (prevProps.filters.sort_by !== this.props.filters.sort_by) {
+    //   this.props.onChangePage(1);
+    //   this.getMovies(this.props.filters, 1);
+    // }
 
     if (this.props.page !== prevProps.page) {
       this.getMovies(this.props.filters, this.props.page);
     }
 
-    if (this.props.filters.primary_release_year !== prevProps.filters.primary_release_year) {
-      this.getMovies(this.props.filters, this.props.page);
+    if (prevProps.filters !== this.props.filters) {
+      this.props.onChangePage(1);
+      this.getMovies(this.props.filters, 1);
     }
 
-    if (this.props.filters.with_genres !== prevProps.filters.with_genres) {
-      this.getMovies(this.props.filters, this.props.page);
-    }
+    // if (this.props.filters.primary_release_year !== prevProps.filters.primary_release_year) {
+    //   this.getMovies(this.props.filters, this.props.page);
+    // }
+
+    // if (this.props.filters.with_genres !== prevProps.filters.with_genres) {
+    //   this.getMovies(this.props.filters, this.props.page);
+    //}
   }
 
   render() {
