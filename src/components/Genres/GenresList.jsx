@@ -44,7 +44,7 @@ export default class Genres extends React.Component {
     console.log(event.target.value)
 
     // const { name, value, checked } = event.target;
-    // const {onChangeFilters} = this.props;
+     const {onChangeFilters} = this.props;
     // const newGenres = [...this.state.genres];
 
     // newGenres[name].checked = checked;
@@ -66,8 +66,11 @@ export default class Genres extends React.Component {
     //   filters: newFilters
     // })
 
+    event.target = {name : 'with_genres', value: updateGenres }
 
-    // onChangeFilters(event);
+            
+     
+    onChangeFilters(event);
 
 
   }
