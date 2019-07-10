@@ -6,7 +6,7 @@ import Genres from "../Genres/GenresList";
 export default class Filters extends React.Component {
   render() {
     const { filters:{sort_by, primary_release_year, with_genres}, onChangeFilters, setDefaultFilters, 
-                      onChangePage, onChangeFiltersGenre, page } = this.props;
+                      onChangePage, total_pages, page } = this.props;
     return (
       <form className="mb-3">
         <SortBy 
@@ -19,7 +19,7 @@ export default class Filters extends React.Component {
         />
         <Genres 
           with_genres={with_genres}
-          onChangeFiltersGenre={onChangeFiltersGenre}
+          onChangeFilters={onChangeFilters}
         />
         <div className="btn-group">
           <button 
@@ -34,7 +34,7 @@ export default class Filters extends React.Component {
           <button type="button" className="btn btn-light" onClick={()=>{onChangePage(page + 1)}} >Вперед</button>
           <button type="button" className="btn btn-light" onClick={setDefaultFilters} >Сбросить фильтры</button>
         </div>
-        <div>Текущая страница: {page}</div>
+        <div>Текущая страница: {page} из {total_pages}</div>
       </form>
     );
   }

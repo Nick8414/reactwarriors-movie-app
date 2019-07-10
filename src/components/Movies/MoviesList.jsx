@@ -22,6 +22,7 @@ export default class MovieList extends Component {
         return response.json();
       })
       .then(data => {
+        this.props.onChangeTotalPage(data.total_pages);
         this.setState({
           movies: data.results
         });
@@ -44,6 +45,8 @@ export default class MovieList extends Component {
     //   this.props.onChangePage(1);
     //   this.getMovies(this.props.filters, 1);
     // }
+
+    
 
     if (this.props.page !== prevProps.page) {
       this.getMovies(this.props.filters, this.props.page);

@@ -24,13 +24,8 @@ export default class Genres extends React.Component {
   getGenresList = async () => {
     try {
       const response = await this.getGenres();
-      // const genres = response.genres.map(genre=>{
-      //   genre.checked = false;
-      //   return genre
-      // })
+      
       const genres = response.genres;
-      console.log(genres)
-
       this.setState({
         genres
       })
@@ -40,50 +35,25 @@ export default class Genres extends React.Component {
   };
 
   onChangeGenre = event => {
-    console.log(event.target.name)
-    console.log(event.target.value)
 
-    // const { name, value, checked } = event.target;
-     const {onChangeFilters} = this.props;
-    // const newGenres = [...this.state.genres];
+    const { with_genres, onChangeFilters } = this.props;
+    const { value } = event.target;
 
-    // newGenres[name].checked = checked;
-    // // onChangeFiltersGenre(parseInt(value));
+    const updateGenres =  with_genres.includes(parseInt(value)) 
+                      ? with_genres.filter(genreId => parseInt(genreId) !== parseInt(value)) 
+                      : [...with_genres, parseInt(value)]
 
-    // this.setState({
-    //   genres: newGenres
-    // })
-
-    // const genresArray = [ ...this.state.filters.with_genres];
-    // const updateGenres =  genresArray.includes(parseInt(genreId)) 
-    //                   ? genresArray.filter(genre => parseInt(genre) !== parseInt(genreId)) 
-    //                   : [...genresArray, parseInt(genreId)]
-    // const newFilters = {
-    //   ...this.state.filters,
-    //   with_genres: updateGenres
-    // }
-    // this.setState({
-    //   filters: newFilters
-    // })
-
-    event.target = {name : 'with_genres', value: updateGenres }
-
-            
-     
-    onChangeFilters(event);
-
-
+    onChangeFilters({
+      target : {
+        name : 'with_genres', 
+        value: updateGenres 
+      }
+    });
   }
 
   componentDidMount() {
     this.getGenresList()
   }
-
-  // componentDidUpdate(prevProps) {
-  //   if (this.props.with_genres === "" &&  this.props.with_genres !== prevProps.with_genres) {
-  //     this.getGenresList()
-  //   }
-  // }
 
   render () {
     return (
