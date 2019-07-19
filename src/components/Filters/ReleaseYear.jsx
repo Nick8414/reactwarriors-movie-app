@@ -1,6 +1,7 @@
 import React from 'react';
+import UISelect from '../UIComponents/UISelect';
 
-export default class ReleaseYear extends React.Component {
+export default class ReleaseYear extends React.PureComponent {
   render() {
     let options = [];
     for (let i = 1883; i<=2019; i++) {
@@ -10,11 +11,10 @@ export default class ReleaseYear extends React.Component {
     const {onChangeFilters, primary_release_year} = this.props; 
     return (
       <div className="form-group">
-        <label htmlFor="primary_release_year">Год выпуска:</label>
-        <select 
+        <UISelect 
+          labelText="Год выпуска"
           name="primary_release_year" 
           id="primary_release_year"
-          className="form-control"
           value={primary_release_year}
           onChange={onChangeFilters}
         >
@@ -23,7 +23,7 @@ export default class ReleaseYear extends React.Component {
               <option key={option.value} value={option.value}>{option.label}</option>
             )
           )}
-        </select>
+        </UISelect>
       </div>
     )
   }

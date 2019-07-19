@@ -64,6 +64,7 @@ export default class Genres extends React.Component {
             this.state.genres.map((genre, idx) => {
               return (
                 <GenreItem 
+                  key = {genre.id}
                   genre={genre}
                   onChangeGenre={this.onChangeGenre}
                   index={idx}
