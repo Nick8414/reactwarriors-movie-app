@@ -40,7 +40,12 @@ export default class sortBy extends React.PureComponent {
         >
           {options.map(el=>
               (
-                <option key={el.value} value={el.value}>{el.label}</option>
+                <option 
+                  key={el.value} 
+                  value={el.value}
+                >
+                  {el.label}
+                </option>
               )
             )}
         </UISelect>
