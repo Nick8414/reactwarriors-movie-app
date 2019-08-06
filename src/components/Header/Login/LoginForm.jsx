@@ -1,5 +1,5 @@
 import React from 'react';
-import {API_URL, API_KEY_3} from '../../../api/api';
+import {API_URL, API_KEY_3, fetchApi} from '../../../api/api';
 import { tsStringKeyword } from '@babel/types';
 
 export default class LoginForm extends React.Component {
@@ -17,6 +17,7 @@ export default class LoginForm extends React.Component {
       [name]: value,
       errors: {
         ...prevState.errors,
+        base: null,
         [name]: null
       }
     }));
@@ -45,29 +46,7 @@ export default class LoginForm extends React.Component {
   }
 
   onSubmit = async () => {
-    const fetchApi = (url, options = {}) => {
-      return new Promise((resolve, reject) => {
-        fetch(url, options)
-          .then(response => {
-            if (response.status < 400) {
-              return response.json()
-            } else {
-              throw response;
-            }
-          })
-          .then(data => {
-            resolve(data);
-           // console.log(data);
-          })
-          .catch(response => {
-            response.json()
-            .then(error=> {
-              reject(error);
-           // console.log('error', error);
-          });
-          });
-        });
-    }
+    
 
      // const getRequestToken = () => {
     //   return new Promise((resolve, reject) => {
@@ -228,12 +207,19 @@ export default class LoginForm extends React.Component {
           request_token: result.request_token
         })
       })
+      this.props.updateSessionId(session_id);
+      const user = await fetchApi(`${API_URL}/account?api_key=${API_KEY_3}&session_id=${session_id}`);
+      this.props.updateUser(user);
+      console.log(user);
+
+
+
       this.setState({
         submitting: false
       });
-      console.log(data);
-      console.log(result);
-      console.log(session_id);
+      // console.log(data);
+      // console.log(result);
+      // console.log(session_id);
     } catch(error) {
       console.log('error', error);
       this.setState({
