@@ -1,11 +1,11 @@
 import React from 'react';
 import {API_URL, API_KEY_3, fetchApi} from '../../../api/api';
-import { tsStringKeyword } from '@babel/types';
 
 export default class LoginForm extends React.Component {
   state = {
     username: "",
     password: "",
+    repeatPassword: "",
     submitting: false,
     errors: {}
   }
@@ -42,144 +42,16 @@ export default class LoginForm extends React.Component {
     if (this.state.username === "") {
       errors.username = "Not empty";
     }
+    if (this.state.password === "") {
+      errors.password = "Not empty";
+    }
+    if (this.state.repeatPassword !== this.state.password) {
+      errors.repeatPassword = "Repeat password must be equal password";
+    }
     return errors;
   }
 
   onSubmit = async () => {
-    
-
-     // const getRequestToken = () => {
-    //   return new Promise((resolve, reject) => {
-    //     fetch(`${API_URL}/authentication/token/new?api_key=${API_KEY_3}`)
-    //       .then(response => {
-    //         if (response.status < 400) {
-    //           return response.json()
-    //         } else {
-    //           throw response;
-    //         }
-    //       })
-    //       .then(data => {
-    //         resolve(data);
-    //         console.log(data);
-    //       })
-    //       .catch(response => {
-    //         response.json()
-    //         .then(error=> {
-    //           reject(error);
-    //         console.log('error', error);
-    //       });
-    //       });
-    //     });
-    //   };
-
-    // const validateWithLogin = (body) => {
-    //   return new Promise((resolve, reject) => {
-    //     fetch(`${API_URL}/authentication/token/validate_with_login?api_key=${API_KEY_3}`, {
-    //       method: "POST",
-    //       mode: "cors",
-    //       headers: {
-    //         "Content-type":"application/json"
-    //       },
-    //       body: JSON.stringify(body)
-    //   })
-    //       .then(response => {
-    //         if (response.status < 400) {
-    //           return response.json()
-    //         } else {
-    //           throw response;
-    //         }
-    //       })
-    //       .then(data => {
-    //         resolve(data);
-    //         console.log(data);
-    //       })
-    //       .catch(response => {
-    //         response.json()
-    //         .then(error=> {
-    //           reject(error);
-    //         console.log('error', error);
-    //       });
-    //       });
-    //     });
-    // }  
-
-      // fetchApi(`${API_URL}/authentication/token/new?api_key=${API_KEY_3}`)
-      //   .then(data => {
-      //     console.log('success',data)
-      //     return fetchApi(`${API_URL}/authentication/token/validate_with_login?api_key=${API_KEY_3}`,  {
-      //       method: "POST",
-      //       mode: "cors",
-      //       headers: {
-      //         "Content-type":"application/json"
-      //       },
-      //       body: JSON.stringify({
-      //                 username: "nick8414",
-      //                 password: "icewind27",
-      //                 request_token: data.request_token
-      //               })
-      //   })
-      // })
-      // .then(data => {
-      //   return fetchApi(`${API_URL}/authentication/session/new?api_key=${API_KEY_3}`, { 
-      //         method: "POST",
-      //         mode: "cors",
-      //         headers: {
-      //           "Content-type":"application/json"
-      //         },
-      //         body: JSON.stringify({
-      //           request_token: data.request_token
-      //         })
-      //       })
-      // })
-      // .then(data => {
-      //   console.log('session', data);
-      // })
-      // .catch(error => {
-      //   console.log('error', error)
-      // });
-   
-
-    // fetch(`${API_URL}/authentication/token/new?api_key=${API_KEY_3}`)
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     console.log(data)
-    //     fetch(`${API_URL}/authentication/token/validate_with_login?api_key=${API_KEY_3}`, {
-    //       method: "POST",
-    //       mode: "cors",
-    //       headers: {
-    //         "Content-type":"application/json"
-    //       },
-    //       body: JSON.stringify({
-    //         username: "nick8414",
-    //         password: "icewind27",
-    //         request_token: data.request_token
-    //       })
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //       console.log(data);
-    //       fetch(`${API_URL}/authentication/session/new?api_key=${API_KEY_3}`,
-    //       {
-    //         method: "POST",
-    //         mode: "cors",
-    //         headers: {
-    //           "Content-type":"application/json"
-    //         },
-    //         body: JSON.stringify({
-    //           username: "nick8414",
-    //           password: "icewind27",
-    //           request_token: data.request_token
-    //         })
-    //       })
-    //       .then(response => response.json())
-    //       .then(data => {
-    //         console.log("session", data);
-    //       })
-    //     })
-    //   })
-
-
-
     try {
       this.setState({
         submitting: true
@@ -284,6 +156,21 @@ export default class LoginForm extends React.Component {
             />
             {errors.password && (
               <div className="invalid-feedback" > {errors.password} </div>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="repeatPassword">Повторить пароль</label>
+            <input 
+              type="text"
+              className="form-control"
+              id="password"
+              placeholder="Повторить пароль"
+              name="repeatPassword"
+              value={this.repeatPassword}
+              onChange={this.onChange}
+            />
+            {errors.repeatPassword && (
+              <div className="invalid-feedback" > {errors.repeatPassword} </div>
             )}
           </div>
           <button

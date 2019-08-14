@@ -6,7 +6,7 @@ import User from "./User"
 
 class Header extends React.Component {
   render() {
-    const {user, updateUser, updateSessionId} = this.props;
+    const {user, updateUser, updateSessionId, logOff} = this.props;
     return (
       <nav className="navbar navbar-dark bg-primary">
         <div className="container">
@@ -15,7 +15,15 @@ class Header extends React.Component {
               <a className="nav-link">Home</a>
             </li>
           </ul>
-          {user ? <User user={user} /> : <Login updateUser={updateUser} updateSessionId={updateSessionId} />}
+          {user ? 
+            <User 
+              user={user} 
+              logOff={logOff}
+            /> : 
+            <Login 
+              updateUser={updateUser} 
+              updateSessionId={updateSessionId} 
+            />}
         </div>
       </nav>
     )

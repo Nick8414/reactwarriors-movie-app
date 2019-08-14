@@ -32,6 +32,15 @@ export default class App extends React.Component {
     });
   };
 
+  logOff = () => {
+    cookies.remove("session_id", {
+      path: "/"
+    });
+    this.setState({
+      user: null
+    })
+  }
+
   updateSessionId = session_id => {
     cookies.set("session_id", session_id, {
       path: "/",
@@ -91,6 +100,7 @@ export default class App extends React.Component {
           user={user}
           updateSessionId={this.updateSessionId}
           updateUser={this.updateUser}
+          logOff={this.logOff}
         />
         <div className="container">
         <div className="row mt-4">
