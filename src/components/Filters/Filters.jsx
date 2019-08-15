@@ -2,11 +2,20 @@ import React from "react";
 import SortBy from "./SortBy";
 import ReleaseYear from "./ReleaseYear";
 import Genres from "../Genres/GenresList";
+import Pagination from "./Pagination";
 
 export default class Filters extends React.Component {
+
+  onNextPage = () => {
+    this.props.onChangePagination('page', this.props.pagination.page + 1);
+  }
+  onPreviousPage = () => {
+    this.props.onChangePagination('page', this.props.pagination.page - 1);
+  }
+
   render() {
     const { filters:{sort_by, primary_release_year, with_genres}, onChangeFilters, setDefaultFilters, 
-                      onChangePage, total_pages, page } = this.props;
+                      onChangePagination, pagination } = this.props;
     return (
       <form className="mb-3">
         <SortBy 
@@ -21,20 +30,12 @@ export default class Filters extends React.Component {
           with_genres={with_genres}
           onChangeFilters={onChangeFilters}
         />
-        <div className="btn-group">
-          <button 
-            type="button" 
-            className="btn btn-light" 
-            disabled={page===1}  
-            onClick={()=>{onChangePage(page - 1)}}
-          >
-            Назад
-          </button>
-          {/* onClick={onChangePage.bind(null, page - 1)} */}
-          <button type="button" className="btn btn-light" onClick={()=>{onChangePage(page + 1)}} >Вперед</button>
-          <button type="button" className="btn btn-light" onClick={setDefaultFilters} >Сбросить фильтры</button>
-        </div>
-        <div>Текущая страница: {page} из {total_pages}</div>
+        <Pagination
+          pagination={pagination}
+          onPreviousPage={this.onPreviousPage}
+          onNextPage={this.onNextPage}
+          setDefaultFilters = {setDefaultFilters}
+        />
       </form>
     );
   }

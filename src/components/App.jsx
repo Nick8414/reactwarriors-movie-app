@@ -7,8 +7,6 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
-
-
 export default class App extends React.Component {
   constructor() {
     super();
@@ -21,8 +19,10 @@ export default class App extends React.Component {
         primary_release_year: 2019,
         with_genres: []
       },
-      page: 1,
-      total_pages: 0
+      pagination: {
+        page: 1,
+        total_pages: 0
+      }
     };
   }
 
@@ -61,17 +61,14 @@ export default class App extends React.Component {
     })
   }
 
-  onChangePage = (page) => {
-    this.setState({
-      page
-    });
-  };
-
-  onChangeTotalPage = (total_pages) => {
-    this.setState({
-      total_pages
-    });
-  };
+  onChangePagination = (key, value) => {
+    this.setState(prevState => ({
+      pagination: {
+        ...prevState.pagination,
+        [key]: value
+      }
+    }))
+  }
 
   setDefaultFilters = () => {
     this.setState({
@@ -93,7 +90,7 @@ export default class App extends React.Component {
    } 
 
   render() {
-    const {filters, page, total_pages, user } = this.state;
+    const {filters, pagination, user } = this.state;
     return (
       <React.Fragment>
         <Header
@@ -109,11 +106,10 @@ export default class App extends React.Component {
               <div className="card-body">
                 <h3>Фильтры:</h3>
                 <Filters
-                  page={page}
-                  total_pages={total_pages}
+                  pagination={pagination}
                   filters={filters} 
                   onChangeFilters={this.onChangeFilters}
-                  onChangePage={this.onChangePage}
+                  onChangePagination={this.onChangePagination}
                   onChangeFiltersGenre={this.onChangeFiltersGenre}
                   setDefaultFilters={this.setDefaultFilters}
                 />
@@ -123,15 +119,13 @@ export default class App extends React.Component {
             <div className="col-8">
               <MoviesList 
                 filters={filters} 
-                page={page} 
-                onChangePage={this.onChangePage}
-                onChangeTotalPage={this.onChangeTotalPage}
+                pagination={pagination}
+                onChangePagination={this.onChangePagination}
               />
             </div>
           </div>
         </div>
-      </React.Fragment>
-      
+      </React.Fragment>  
     );
   }
 }

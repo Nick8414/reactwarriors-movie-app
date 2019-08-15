@@ -22,48 +22,27 @@ export default class MovieList extends Component {
         return response.json();
       })
       .then(data => {
-        this.props.onChangeTotalPage(data.total_pages);
+        this.props.onChangePagination('total_pages', data.total_pages);
         this.setState({
           movies: data.results
         });
       });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.filters.sort_by !== this.props.filters.sort_by) {
-      this.getMovies(nextProps.filters)
-    }
-  }
-
   componentDidMount() {
-    // const sort_by = this.props.filters.sort_by
     this.getMovies(this.props.filters)
   }
 
   componentDidUpdate(prevProps) {
-    // if (prevProps.filters.sort_by !== this.props.filters.sort_by) {
-    //   this.props.onChangePage(1);
-    //   this.getMovies(this.props.filters, 1);
-    // }
-
-    
-
-    if (this.props.page !== prevProps.page) {
-      this.getMovies(this.props.filters, this.props.page);
+    if (this.props.pagination.page !== prevProps.pagination.page) {
+      console.log(this.props.pagination)
+      this.getMovies(this.props.filters, this.props.pagination.page);
     }
 
     if (prevProps.filters !== this.props.filters) {
-      this.props.onChangePage(1);
+      this.props.onChangePagination('page', 1);
       this.getMovies(this.props.filters, 1);
     }
-
-    // if (this.props.filters.primary_release_year !== prevProps.filters.primary_release_year) {
-    //   this.getMovies(this.props.filters, this.props.page);
-    // }
-
-    // if (this.props.filters.with_genres !== prevProps.filters.with_genres) {
-    //   this.getMovies(this.props.filters, this.props.page);
-    //}
   }
 
   render() {
