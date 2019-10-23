@@ -1,80 +1,34 @@
-import React from 'react';
-import GenreItem from './GenreItem';
-import { API_URL, API_KEY_3 } from "../../api/api";
+import React from "react";
+import GenreItem from "./GenreItem";
+import PropTypes from "prop-types";
 
-export default class Genres extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      genres : [],
-      agree: true
-    }
-  }
+const GenresList = ({ genres }) => {
+  return (
+    <React.Fragment>
+      <div>Жанр:</div>
+      <div className="form-check">
+        {genres.map((genre, idx) => {
+          return (
+            <GenreItem
+              key={genre.id}
+              genre={genre}
+              onChangeGenre={this.onChangeGenre}
+              index={idx}
+              checked={this.props.with_genres.includes(genre.id)}
+            />
+          );
+        })}
+      </div>
+    </React.Fragment>
+  );
+};
 
-  getGenres = async () => {
-    const link = `${API_URL}/genre/movie/list?api_key=${API_KEY_3}&language=ru-RU`;
-    const response = await fetch(link);
-    const body = await response.json();
-   
-    if (response.status !== 200)
-      throw Error(body.message);
-      return body;
-  }
+GenresList.defaultProps = {
+  genres: [],
+};
 
-  getGenresList = async () => {
-    try {
-      const response = await this.getGenres();
-      
-      const genres = response.genres;
-      this.setState({
-        genres
-      })
-    } catch (err) {
-      console.error(`Error: ${err.message}`)
-    }
-  };
+GenresList.propTypes = {
+  genres: PropTypes.array.isRequired,
+};
 
-  onChangeGenre = event => {
-
-    const { with_genres, onChangeFilters } = this.props;
-    const { value } = event.target;
-
-    const updateGenres =  with_genres.includes(parseInt(value)) 
-                      ? with_genres.filter(genreId => parseInt(genreId) !== parseInt(value)) 
-                      : [...with_genres, parseInt(value)]
-
-    onChangeFilters({
-      target : {
-        name : 'with_genres', 
-        value: updateGenres 
-      }
-    });
-  }
-
-  componentDidMount() {
-    this.getGenresList()
-  }
-
-  render () {
-    return (
-      <React.Fragment>
-        <div>Жанр:</div>
-        <div className="form-check">
-          {
-            this.state.genres.map((genre, idx) => {
-              return (
-                <GenreItem 
-                  key = {genre.id}
-                  genre={genre}
-                  onChangeGenre={this.onChangeGenre}
-                  index={idx}
-                  checked={this.props.with_genres.includes(genre.id)}
-                />
-              )
-            })
-          }
-        </div>
-      </React.Fragment>   
-    )
-  }
-}
+export default GenresList;

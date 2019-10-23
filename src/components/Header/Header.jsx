@@ -1,32 +1,30 @@
 import React from "react";
 import Login from "./Login/Login";
-import User from "./User"
+import User from "./User";
 
 //PorpTypes - доделать
 
 class Header extends React.Component {
   render() {
-    const {user, updateUser, updateSessionId, logOff} = this.props;
+    const { user, updateSessionId, logOff } = this.props;
     return (
       <nav className="navbar navbar-dark bg-primary">
         <div className="container">
           <ul className="navbar-nav">
             <li className="nav-item-active">
-              <a className="nav-link" href="#" >Home</a>
+              <a className="nav-link" href="google.com">
+                Home
+              </a>
             </li>
           </ul>
-          {user ? 
-            <User 
-              user={user} 
-              logOff={logOff}
-            /> : 
-            <Login 
-              updateUser={updateUser} 
-              updateSessionId={updateSessionId} 
-            />}
+          {user ? (
+            <User logOff={logOff} />
+          ) : (
+            <Login updateSessionId={updateSessionId} />
+          )}
         </div>
       </nav>
-    )
+    );
   }
 }
 

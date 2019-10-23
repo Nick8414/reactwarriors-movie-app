@@ -1,7 +1,11 @@
 body {
-  background: #fdfdfd; 
+  background: #fdfdfd;
 }
 
 .invalid-feedback {
   display: block;
+}
+
+input.invalid {
+  border-color: #dc3545;
 }
