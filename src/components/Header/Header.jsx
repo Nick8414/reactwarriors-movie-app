@@ -6,7 +6,7 @@ import User from "./User";
 
 class Header extends React.Component {
   render() {
-    const { user, updateSessionId, logOff } = this.props;
+    const { user, logOff } = this.props;
     return (
       <nav className="navbar navbar-dark bg-primary">
         <div className="container">
@@ -17,11 +17,7 @@ class Header extends React.Component {
               </a>
             </li>
           </ul>
-          {user ? (
-            <User logOff={logOff} />
-          ) : (
-            <Login updateSessionId={updateSessionId} />
-          )}
+          {user ? <User logOff={logOff} /> : <Login />}
         </div>
       </nav>
     );
