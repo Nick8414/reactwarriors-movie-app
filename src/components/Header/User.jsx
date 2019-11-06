@@ -1,5 +1,6 @@
 import React from "react";
-import { AppContext } from "../App";
+// import { AppContext } from "../App";
+import AppContextHOC from "../HOC/AppContextHOC";
 
 class User extends React.Component {
   render() {
@@ -20,16 +21,4 @@ class User extends React.Component {
   }
 }
 
-const UserContainer = props => {
-  return (
-    <AppContext.Consumer>
-      {context => {
-        return <User user={context.user} {...props} />;
-      }}
-    </AppContext.Consumer>
-  );
-};
-
-UserContainer.displayName = "UserContainer";
-
-export default UserContainer;
+export default AppContextHOC(User);
