@@ -2,7 +2,7 @@ import React from "react";
 import { API_URL, API_KEY_3 } from "../../api/api";
 import GenresList from "./GenresList";
 
-export default class Genres extends React.Component {
+export default class GenresContainer extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -54,7 +54,7 @@ export default class Genres extends React.Component {
   }
 
   render() {
-    const { genres } = this.state.genres;
-    <GenresList genres={genres} />;
+    const { genres } = this.state;
+    return <GenresList genres={genres} onChangeGenre={this.onChangeGenre} />;
   }
 }

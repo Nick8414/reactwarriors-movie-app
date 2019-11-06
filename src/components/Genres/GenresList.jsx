@@ -1,8 +1,9 @@
 import React from "react";
 import GenreItem from "./GenreItem";
 import PropTypes from "prop-types";
+import GenresHOC from "./GenresHOC";
 
-const GenresList = ({ genres }) => {
+const GenresList = ({ genres, onChangeGenre, with_genres }) => {
   return (
     <React.Fragment>
       <div>Жанр:</div>
@@ -12,9 +13,9 @@ const GenresList = ({ genres }) => {
             <GenreItem
               key={genre.id}
               genre={genre}
-              onChangeGenre={this.onChangeGenre}
+              onChangeGenre={onChangeGenre}
               index={idx}
-              checked={this.props.with_genres.includes(genre.id)}
+              checked={with_genres.includes(genre.id)}
             />
           );
         })}
@@ -31,4 +32,4 @@ GenresList.propTypes = {
   genres: PropTypes.array.isRequired,
 };
 
-export default GenresList;
+export default GenresHOC(GenresList);
