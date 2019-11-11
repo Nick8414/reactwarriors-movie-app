@@ -1,5 +1,5 @@
 import React from "react";
-import { API_URL, API_KEY_3, fetchApi } from "../../../api/api";
+import CallApi, { API_URL, API_KEY_3, fetchApi } from "../../../api/api";
 import classNames from "classnames";
 import { AppContext } from "../../App";
 import AppContextHOC from "../../HOC/AppContextHOC";
@@ -59,41 +59,29 @@ class LoginForm extends React.Component {
       this.setState({
         submitting: true,
       });
-      const data = await fetchApi(
-        `${API_URL}/authentication/token/new?api_key=${API_KEY_3}`
-      );
-      const result = await fetchApi(
-        `${API_URL}/authentication/token/validate_with_login?api_key=${API_KEY_3}`,
+      const data = await CallApi.get(`/authentication/token/new`);
+
+      const result = await CallApi.post(
+        `/authentication/token/validate_with_login`,
         {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify({
+          body: {
             username: this.state.username,
             password: this.state.password,
             request_token: data.request_token,
-          }),
-        }
-      );
-      const { session_id } = await fetchApi(
-        `${API_URL}/authentication/session/new?api_key=${API_KEY_3}`,
-        {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-type": "application/json",
           },
-          body: JSON.stringify({
-            request_token: result.request_token,
-          }),
         }
       );
+      const { session_id } = await CallApi.post(`/authentication/session/new`, {
+        body: {
+          request_token: result.request_token,
+        },
+      });
       this.props.updateSessionId(session_id);
-      const user = await fetchApi(
-        `${API_URL}/account?api_key=${API_KEY_3}&session_id=${session_id}`
-      );
+      const user = await CallApi.get(`/account`, {
+        params: {
+          session_id: data.session_id,
+        },
+      });
 
       this.setState(
         {
