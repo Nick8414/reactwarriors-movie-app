@@ -44,6 +44,14 @@ export default class App extends React.Component {
     });
   };
 
+  onLogOut = () => {
+    cookies.remove("session_id");
+    this.setState({
+      session_id: null,
+      user: null,
+    });
+  };
+
   updateSessionId = session_id => {
     cookies.set("session_id", session_id, {
       path: "/",
@@ -91,6 +99,7 @@ export default class App extends React.Component {
         `${API_URL}/account?api_key=${API_KEY_3}&session_id=${session_id}`
       );
       this.updateUser(user);
+      this.updateSessionId(session_id);
     }
   }
 
@@ -103,6 +112,7 @@ export default class App extends React.Component {
           session_id: session_id,
           updateSessionId: this.updateSessionId,
           updateUser: this.updateUser,
+          onLogOut: this.onLogOut,
         }}
       >
         <React.Fragment>

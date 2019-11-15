@@ -76,10 +76,11 @@ class LoginForm extends React.Component {
           request_token: result.request_token,
         },
       });
+      console.log(session_id);
       this.props.updateSessionId(session_id);
       const user = await CallApi.get(`/account`, {
         params: {
-          session_id: data.session_id,
+          session_id: session_id,
         },
       });
 

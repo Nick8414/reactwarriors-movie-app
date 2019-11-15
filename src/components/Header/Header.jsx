@@ -1,6 +1,7 @@
 import React from "react";
 import Login from "./Login/Login";
 import User from "./User";
+import UserMenu from "./UserMenu";
 
 //PorpTypes - доделать
 
@@ -17,7 +18,7 @@ class Header extends React.Component {
               </a>
             </li>
           </ul>
-          {user ? <User logOff={logOff} /> : <Login />}
+          {user ? <UserMenu /> : <Login />}
         </div>
       </nav>
     );

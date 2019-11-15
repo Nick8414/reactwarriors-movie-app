@@ -52,6 +52,7 @@ export default class CallApi {
   }
 
   static post (url, options = {}) {
+    console.log(options)
     const { params = {}, body = {} } = options
     const queryStringParams = {
       api_key: API_KEY_3,
