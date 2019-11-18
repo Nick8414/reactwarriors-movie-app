@@ -92,6 +92,22 @@ class LoginForm extends React.Component {
           this.props.updateUser(user);
         }
       );
+
+      const queryStringParams = {
+        api_key: API_KEY_3,
+        session_id,
+        language: "ru-RU",
+      };
+
+      const favoriteMovies = await CallApi.get(
+        `/account/${user.id}/favorite/movies`,
+        {
+          params: queryStringParams,
+        }
+      );
+
+      console.log(`favoriteMovies`);
+      console.log(favoriteMovies);
     } catch (error) {
       console.log("error", error);
       this.setState({

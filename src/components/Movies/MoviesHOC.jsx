@@ -34,12 +34,39 @@ export default Component =>
       CallApi.get("/discover/movie", {
         params: queryStringParams,
       }).then(data => {
+        console.log("data movies");
+        console.log(data);
         this.props.onChangePagination("total_pages", data.total_pages);
         this.setState({
           movies: data.results,
         });
       });
     };
+
+    // const queryStringParams = {
+    //   session_id,
+    //   language: "ru-RU",
+    // };
+
+    // const favoriteMovies = await CallApi.get(
+    //   `/account/${user.id}/favorite/movies`,
+    //   {
+    //     params: queryStringParams,
+    //   }
+    // );
+
+    setFavorite(movieId) {
+      const result = await CallApi.post(
+        `/account/{account_id}/favorite`,
+        {
+          body: {
+            username: this.state.username,
+            password: this.state.password,
+            request_token: data.request_token,
+          },
+        }
+      );
+    }
 
     componentDidMount() {
       this.getMovies(this.props.filters);

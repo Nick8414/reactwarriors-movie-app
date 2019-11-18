@@ -12,8 +12,16 @@ export default class MovieItem extends React.Component {
           alt=""
         />
         <div className="card-body">
-          <h6 className="card-title">{item.title}</h6>
+          <h6 className="card-title">
+            {item.title} {item.id}
+          </h6>
           <div className="card-text">Рейтинг: {item.vote_average}</div>
+          {/* <i className="material-icons">star</i> */}
+          <i className="material-icons" onClick={setFavorite}>
+            star_border
+          </i>
+          {/* <i className="material-icons">bookmark</i> */}
+          <i className="material-icons">bookmark_border</i>
         </div>
       </div>
     );
