@@ -1,6 +1,48 @@
 import React from "react";
+import CallApi, { API_KEY_3, fetchApi } from "../../api/api";
 
 export default class MovieItem extends React.Component {
+  async changeFavoriteStatus(movieId, favoriteStatus) {
+    const { user, session_id } = this.props;
+    console.log(this.props);
+    const queryStringParams = {
+      api_key: API_KEY_3,
+      session_id,
+      language: "ru-RU",
+    };
+
+    const result = await CallApi.post(`/account/${user.id}/favorite`, {
+      params: queryStringParams,
+      body: {
+        media_type: "movie",
+        media_id: movieId,
+        favorite: favoriteStatus,
+      },
+    });
+
+    console.log(result);
+  }
+
+  async changeWatchListStatus(movieId, favoriteStatus) {
+    const { user, session_id } = this.props;
+    console.log(this.props);
+    const queryStringParams = {
+      api_key: API_KEY_3,
+      session_id,
+      language: "ru-RU",
+    };
+
+    const result = await CallApi.post(`/account/${user.id}/favorite`, {
+      params: queryStringParams,
+      body: {
+        media_type: "movie",
+        media_id: movieId,
+        watchlist: watchlistStatus,
+      },
+    });
+
+    console.log(result);
+  }
   render() {
     const { item } = this.props;
     return (
@@ -17,11 +59,20 @@ export default class MovieItem extends React.Component {
           </h6>
           <div className="card-text">Рейтинг: {item.vote_average}</div>
           {/* <i className="material-icons">star</i> */}
-          <i className="material-icons" onClick={setFavorite}>
+
+          <i
+            className="material-icons"
+            onClick={() => this.changeFavoriteStatus(item.id, true)}
+          >
             star_border
           </i>
           {/* <i className="material-icons">bookmark</i> */}
-          <i className="material-icons">bookmark_border</i>
+          <i
+            className="material-icons"
+            onClick={() => this.changeWatchListStatus(item.id, true)}
+          >
+            bookmark_border
+          </i>
         </div>
       </div>
     );

@@ -55,18 +55,15 @@ export default Component =>
     //   }
     // );
 
-    setFavorite(movieId) {
-      const result = await CallApi.post(
-        `/account/{account_id}/favorite`,
-        {
-          body: {
-            username: this.state.username,
-            password: this.state.password,
-            request_token: data.request_token,
-          },
-        }
-      );
-    }
+    // async setFavorite(movieId) {
+    //   const result = await CallApi.post(`/account/{account_id}/favorite`, {
+    //     body: {
+    //       username: this.state.username,
+    //       password: this.state.password,
+    //       request_token: data.request_token,
+    //     },
+    //   });
+    // }
 
     componentDidMount() {
       this.getMovies(this.props.filters);
@@ -86,6 +83,6 @@ export default Component =>
 
     render() {
       const { movies } = this.state;
-      return <Component movies={movies} />;
+      return <Component movies={movies} setFavorite={this.setFavorite} />;
     }
   };
