@@ -23,7 +23,7 @@ export default class MovieItem extends React.Component {
     console.log(result);
   }
 
-  async changeWatchListStatus(movieId, favoriteStatus) {
+  async changeWatchListStatus(movieId, watchlistStatus) {
     const { user, session_id } = this.props;
     console.log(this.props);
     const queryStringParams = {
@@ -58,7 +58,12 @@ export default class MovieItem extends React.Component {
             {item.title} {item.id}
           </h6>
           <div className="card-text">Рейтинг: {item.vote_average}</div>
-          {/* <i className="material-icons">star</i> */}
+          <i
+            className="material-icons"
+            onClick={() => this.changeFavoriteStatus(item.id, false)}
+          >
+            star
+          </i>
 
           <i
             className="material-icons"

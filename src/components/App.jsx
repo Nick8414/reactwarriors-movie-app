@@ -35,14 +35,14 @@ export default class App extends React.Component {
     });
   };
 
-  logOff = () => {
-    cookies.remove("session_id", {
-      path: "/",
-    });
-    this.setState({
-      user: null,
-    });
-  };
+  // logOff = () => {
+  //   cookies.remove("session_id", {
+  //     path: "/",
+  //   });
+  //   this.setState({
+  //     user: null,
+  //   });
+  // };
 
   onLogOut = () => {
     cookies.remove("session_id");

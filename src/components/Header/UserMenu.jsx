@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import { tsThisType, tsStringKeyword } from "@babel/types";
 import { AppContext } from "../App";
 
 class UserMenu extends Component {
