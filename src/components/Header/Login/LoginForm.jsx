@@ -106,6 +106,9 @@ class LoginForm extends React.Component {
         }
       );
 
+      const favoriteMoviesIds = favoriteMovies.results.map(el => el.id);
+      this.props.setFavorites(favoriteMoviesIds);
+
       console.log(`favoriteMovies`);
       console.log(favoriteMovies);
     } catch (error) {

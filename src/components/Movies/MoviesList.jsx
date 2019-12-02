@@ -9,7 +9,18 @@ const MoviesList = ({ movies, user, session_id }) => (
     {movies.map(movie => {
       return (
         <div key={movie.id} className="col-6 mb-4">
-          <MovieItem item={movie} user={user} session_id={session_id} />
+          <AppContext.Consumer>
+            {context => {
+              return (
+                <MovieItem
+                  item={movie}
+                  user={user}
+                  session_id={session_id}
+                  {...context}
+                />
+              );
+            }}
+          </AppContext.Consumer>
         </div>
       );
     })}

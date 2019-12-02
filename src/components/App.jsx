@@ -3,7 +3,7 @@ import Filters from "./Filters/Filters";
 import MoviesContainer from "./Movies/MoviesContainer";
 import MoviesList from "./Movies/MoviesList";
 import Header from "./Header/Header";
-import { API_URL, API_KEY_3, fetchApi } from "../api/api";
+import CallApi, { API_URL, API_KEY_3, fetchApi } from "../api/api";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
@@ -16,6 +16,7 @@ export default class App extends React.Component {
 
     this.state = {
       user: null,
+      favorites: [],
       session_id: null,
       filters: {
         sort_by: "vote_average.asc",
@@ -92,6 +93,23 @@ export default class App extends React.Component {
     });
   };
 
+  setFavorites = favorites => {
+    this.setState({
+      favorites,
+    });
+  };
+
+  deleteFromFavorites = movieId => {
+    const newFavorites = this.state.favorites.filter(el => el !== movieId);
+
+    console.log("newFavorites");
+    console.log(newFavorites);
+
+    this.setState({
+      favorites: newFavorites,
+    });
+  };
+
   async componentDidMount() {
     const session_id = cookies.get("session_id");
     if (session_id) {
@@ -99,20 +117,38 @@ export default class App extends React.Component {
         `${API_URL}/account?api_key=${API_KEY_3}&session_id=${session_id}`
       );
       this.updateUser(user);
+      const queryStringParams = {
+        api_key: API_KEY_3,
+        session_id,
+        language: "ru-RU",
+      };
+
+      const favoriteMovies = await CallApi.get(
+        `/account/${user.id}/favorite/movies`,
+        {
+          params: queryStringParams,
+        }
+      );
+
+      const favoriteMoviesIds = favoriteMovies.results.map(el => el.id);
+      this.setFavorites(favoriteMoviesIds);
       this.updateSessionId(session_id);
     }
   }
 
   render() {
-    const { filters, pagination, user, session_id } = this.state;
+    const { filters, pagination, user, session_id, favorites } = this.state;
     return (
       <AppContext.Provider
         value={{
           user: user,
           session_id: session_id,
+          favorites: favorites,
           updateSessionId: this.updateSessionId,
           updateUser: this.updateUser,
           onLogOut: this.onLogOut,
+          setFavorites: this.setFavorites,
+          deleteFromFavorites: this.deleteFromFavorites,
         }}
       >
         <React.Fragment>
