@@ -17,6 +17,7 @@ export default class App extends React.Component {
     this.state = {
       user: null,
       favorites: [],
+      watchList: [],
       session_id: null,
       filters: {
         sort_by: "vote_average.asc",
@@ -35,15 +36,6 @@ export default class App extends React.Component {
       user,
     });
   };
-
-  // logOff = () => {
-  //   cookies.remove("session_id", {
-  //     path: "/",
-  //   });
-  //   this.setState({
-  //     user: null,
-  //   });
-  // };
 
   onLogOut = () => {
     cookies.remove("session_id");
@@ -101,17 +93,41 @@ export default class App extends React.Component {
 
   deleteFromFavorites = movieId => {
     const newFavorites = this.state.favorites.filter(el => el !== movieId);
-
-    console.log("newFavorites");
-    console.log(newFavorites);
-
     this.setState({
       favorites: newFavorites,
     });
   };
 
+  addToFavorites = movieId => {
+    const newFavorites = [...this.state.favorites, movieId];
+    this.setState({
+      favorites: newFavorites,
+    });
+  };
+
+  setWatchList = watchList => {
+    this.setState({
+      watchList,
+    });
+  };
+
+  deleteFromWatchList = movieId => {
+    const newWatchList = this.state.watchList.filter(el => el !== movieId);
+    this.setState({
+      watchList: newWatchList,
+    });
+  };
+
+  addToWatchList = movieId => {
+    const newWatchList = [...this.state.watchList, movieId];
+    this.setState({
+      watchList: newWatchList,
+    });
+  };
+
   async componentDidMount() {
     const session_id = cookies.get("session_id");
+
     if (session_id) {
       const user = await fetchApi(
         `${API_URL}/account?api_key=${API_KEY_3}&session_id=${session_id}`
@@ -132,23 +148,46 @@ export default class App extends React.Component {
 
       const favoriteMoviesIds = favoriteMovies.results.map(el => el.id);
       this.setFavorites(favoriteMoviesIds);
+
+      const watchList = await CallApi.get(
+        `/account/${user.id}/watchlist/movies`,
+        {
+          params: queryStringParams,
+        }
+      );
+
+      const watchListsIds = watchList.results.map(el => el.id);
+      this.setWatchList(watchListsIds);
+
       this.updateSessionId(session_id);
     }
   }
 
   render() {
-    const { filters, pagination, user, session_id, favorites } = this.state;
+    const {
+      filters,
+      pagination,
+      user,
+      session_id,
+      favorites,
+      watchList,
+    } = this.state;
     return (
       <AppContext.Provider
         value={{
           user: user,
           session_id: session_id,
           favorites: favorites,
+          watchList: watchList,
           updateSessionId: this.updateSessionId,
           updateUser: this.updateUser,
           onLogOut: this.onLogOut,
           setFavorites: this.setFavorites,
           deleteFromFavorites: this.deleteFromFavorites,
+          addToFavorites: this.addToFavorites,
+          setWatchList: this.setWatchList,
+          addToWatchList: this.addToWatchList,
+          deleteFromWatchList: this.deleteFromWatchList,
         }}
       >
         <React.Fragment>

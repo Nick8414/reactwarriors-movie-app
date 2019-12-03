@@ -1,8 +1,10 @@
 import React from "react";
+import Cookies from "universal-cookie";
 
 import { Modal, ModalBody } from "reactstrap";
 import LoginForm from "./LoginForm";
 
+const cookies = new Cookies();
 export default class Login extends React.Component {
   constructor() {
     super();
@@ -16,6 +18,15 @@ export default class Login extends React.Component {
       showLoginForm: !prevState.showLoginForm,
     }));
   };
+
+  componentDidMount() {
+    console.log("Login componentn did mount");
+    const session_id = cookies.get("session_id");
+
+    if (!session_id) {
+      this.toggleLoginForm();
+    }
+  }
 
   render() {
     return (

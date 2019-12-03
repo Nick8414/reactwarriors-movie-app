@@ -40,7 +40,12 @@ export default class MovieItem extends React.Component {
   }
 
   async changeWatchListStatus(movieId, watchlistStatus) {
-    const { user, session_id } = this.props;
+    const {
+      user,
+      session_id,
+      addToWatchList,
+      deleteFromWatchList,
+    } = this.props;
     console.log(this.props);
     const queryStringParams = {
       api_key: API_KEY_3,
@@ -48,19 +53,30 @@ export default class MovieItem extends React.Component {
       language: "ru-RU",
     };
 
-    const result = await CallApi.post(`/account/${user.id}/favorite`, {
-      params: queryStringParams,
-      body: {
-        media_type: "movie",
-        media_id: movieId,
-        watchlist: watchlistStatus,
-      },
-    });
+    try {
+      const result = await CallApi.post(`/account/${user.id}/watchlist`, {
+        params: queryStringParams,
+        body: {
+          media_type: "movie",
+          media_id: movieId,
+          watchlist: watchlistStatus,
+        },
+      });
 
-    console.log(result);
+      console.log(result);
+      if (result.status_code === 1) {
+        addToWatchList(movieId);
+      }
+
+      if (result.status_code === 13) {
+        deleteFromWatchList(movieId);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
   render() {
-    const { item, favorites } = this.props;
+    const { item, favorites, watchList } = this.props;
 
     return (
       <div className="card" style={{ width: "100%" }}>
@@ -92,13 +108,21 @@ export default class MovieItem extends React.Component {
             </i>
           )}
 
-          {/* <i className="material-icons">bookmark</i> */}
-          <i
-            className="material-icons"
-            onClick={() => this.changeWatchListStatus(item.id, true)}
-          >
-            bookmark_border
-          </i>
+          {watchList.includes(item.id) ? (
+            <i
+              className="material-icons"
+              onClick={() => this.changeWatchListStatus(item.id, false)}
+            >
+              bookmark
+            </i>
+          ) : (
+            <i
+              className="material-icons"
+              onClick={() => this.changeWatchListStatus(item.id, true)}
+            >
+              bookmark_border
+            </i>
+          )}
         </div>
       </div>
     );

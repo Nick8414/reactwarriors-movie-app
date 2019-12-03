@@ -109,6 +109,19 @@ class LoginForm extends React.Component {
       const favoriteMoviesIds = favoriteMovies.results.map(el => el.id);
       this.props.setFavorites(favoriteMoviesIds);
 
+      const watchList = await CallApi.get(
+        `/account/${user.id}/watchlist/movies`,
+        {
+          params: queryStringParams,
+        }
+      );
+
+      console.log("watchList");
+      console.log(watchList);
+
+      const watchListsIds = watchList.results.map(el => el.id);
+      this.props.setWatchList(watchListsIds);
+
       console.log(`favoriteMovies`);
       console.log(favoriteMovies);
     } catch (error) {
