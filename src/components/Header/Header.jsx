@@ -2,6 +2,7 @@ import React from "react";
 import Login from "./Login/Login";
 import User from "./User";
 import UserMenu from "./UserMenu";
+import App, { AppContext } from "../App";
 
 //PorpTypes - доделать
 
@@ -18,7 +19,15 @@ class Header extends React.Component {
               </a>
             </li>
           </ul>
-          {user ? <UserMenu /> : <Login />}
+          {user ? (
+            <UserMenu />
+          ) : (
+            <AppContext.Consumer>
+              {context => {
+                return <Login session_id={context.session_id} />;
+              }}
+            </AppContext.Consumer>
+          )}
         </div>
       </nav>
     );
