@@ -116,16 +116,9 @@ class LoginForm extends React.Component {
         }
       );
 
-      console.log("watchList");
-      console.log(watchList);
-
       const watchListsIds = watchList.results.map(el => el.id);
       this.props.setWatchList(watchListsIds);
-
-      console.log(`favoriteMovies`);
-      console.log(favoriteMovies);
     } catch (error) {
-      console.log("error", error);
       this.setState({
         submitting: false,
         errors: {

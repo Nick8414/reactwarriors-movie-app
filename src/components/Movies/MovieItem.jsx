@@ -1,7 +1,8 @@
 import React from "react";
 import CallApi, { API_KEY_3, fetchApi } from "../../api/api";
+import AppContextHOC from "../HOC/AppContextHOC";
 
-export default class MovieItem extends React.Component {
+class MovieItem extends React.Component {
   async changeFavoriteStatus(movieId, favoriteStatus) {
     const {
       user,
@@ -128,3 +129,5 @@ export default class MovieItem extends React.Component {
     );
   }
 }
+
+export default AppContextHOC(MovieItem);

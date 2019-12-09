@@ -20,7 +20,6 @@ export default class Login extends React.Component {
   };
 
   componentDidMount() {
-    console.log("Login componentn did mount");
     const { session_id } = this.props;
     this.setState({ showLoginForm: !session_id });
   }
