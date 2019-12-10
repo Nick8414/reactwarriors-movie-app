@@ -1,5 +1,5 @@
 import React from "react";
-import CallApi, { API_KEY_3, fetchApi } from "../../api/api";
+import CallApi from "../../api/api";
 import AppContextHOC from "../HOC/AppContextHOC";
 
 class MovieItem extends React.Component {
@@ -10,9 +10,8 @@ class MovieItem extends React.Component {
       deleteFromFavorites,
       addToFavorites,
     } = this.props;
-    console.log(this.props);
+
     const queryStringParams = {
-      api_key: API_KEY_3,
       session_id,
       language: "ru-RU",
     };
@@ -26,7 +25,6 @@ class MovieItem extends React.Component {
           favorite: favoriteStatus,
         },
       });
-      console.log(result);
 
       if (result.status_code === 1) {
         addToFavorites(movieId);
@@ -47,9 +45,8 @@ class MovieItem extends React.Component {
       addToWatchList,
       deleteFromWatchList,
     } = this.props;
-    console.log(this.props);
+
     const queryStringParams = {
-      api_key: API_KEY_3,
       session_id,
       language: "ru-RU",
     };
@@ -64,7 +61,6 @@ class MovieItem extends React.Component {
         },
       });
 
-      console.log(result);
       if (result.status_code === 1) {
         addToWatchList(movieId);
       }
@@ -88,9 +84,7 @@ class MovieItem extends React.Component {
           alt=""
         />
         <div className="card-body">
-          <h6 className="card-title">
-            {item.title} {item.id}
-          </h6>
+          <h6 className="card-title">{item.title}</h6>
           <div className="card-text">Рейтинг: {item.vote_average}</div>
 
           {favorites.includes(item.id) ? (

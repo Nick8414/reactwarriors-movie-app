@@ -1,5 +1,4 @@
 import React from "react";
-// import { AppContext } from "../App";
 import AppContextHOC from "../HOC/AppContextHOC";
 import UserMenu from "./UserMenu";
 

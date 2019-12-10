@@ -1,11 +1,10 @@
 import React from "react";
-import Cookies from "universal-cookie";
 
 import { Modal, ModalBody } from "reactstrap";
 import LoginForm from "./LoginForm";
+import AppContextHOC from "../../HOC/AppContextHOC";
 
-const cookies = new Cookies();
-export default class Login extends React.Component {
+class Login extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -43,3 +42,5 @@ export default class Login extends React.Component {
     );
   }
 }
+
+export default AppContextHOC(Login);

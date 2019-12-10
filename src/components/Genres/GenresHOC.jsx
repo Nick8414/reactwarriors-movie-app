@@ -1,6 +1,5 @@
 import React from "react";
-import { API_URL, API_KEY_3 } from "../../api/api";
-import GenresList from "./GenresList";
+import CallApi from "../../api/api";
 
 export default Component =>
   class GenresHOC extends React.Component {
@@ -13,11 +12,14 @@ export default Component =>
     }
 
     getGenres = async () => {
-      const link = `${API_URL}/genre/movie/list?api_key=${API_KEY_3}&language=ru-RU`;
-      const response = await fetch(link);
-      const body = await response.json();
+      const queryStringParams = {
+        language: "ru-RU",
+      };
 
-      if (response.status !== 200) throw Error(body.message);
+      const body = await CallApi.get("/genre/movie/list", {
+        params: queryStringParams,
+      });
+
       return body;
     };
 

@@ -1,7 +1,6 @@
 import React from "react";
-import CallApi, { API_URL, API_KEY_3, fetchApi } from "../../../api/api";
+import CallApi from "../../../api/api";
 import classNames from "classnames";
-import { AppContext } from "../../App";
 import AppContextHOC from "../../HOC/AppContextHOC";
 
 class LoginForm extends React.Component {
@@ -76,7 +75,7 @@ class LoginForm extends React.Component {
           request_token: result.request_token,
         },
       });
-      console.log(session_id);
+
       this.props.updateSessionId(session_id);
       const user = await CallApi.get(`/account`, {
         params: {
@@ -94,7 +93,6 @@ class LoginForm extends React.Component {
       );
 
       const queryStringParams = {
-        api_key: API_KEY_3,
         session_id,
         language: "ru-RU",
       };

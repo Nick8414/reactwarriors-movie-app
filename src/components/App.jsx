@@ -1,6 +1,5 @@
 import React from "react";
 import Filters from "./Filters/Filters";
-import MoviesContainer from "./Movies/MoviesContainer";
 import MoviesList from "./Movies/MoviesList";
 import Header from "./Header/Header";
 import CallApi, { API_URL, API_KEY_3, fetchApi } from "../api/api";

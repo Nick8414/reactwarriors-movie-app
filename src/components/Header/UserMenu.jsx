@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { fetchApi, API_URL, API_KEY_3 } from "../../api/api";
+import CallApi from "../../api/api";
 import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import { AppContext } from "../App";
+import AppContextHOC from "../HOC/AppContextHOC";
 
 class UserMenu extends Component {
   state = {
@@ -20,18 +20,26 @@ class UserMenu extends Component {
   };
 
   handleLogOut = () => {
-    fetchApi(`${API_URL}/authentication/session?api_key=${API_KEY_3}`, {
-      method: "DELETE",
-      mode: "cors",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
+    CallApi.delete("/authentication/session", {
+      body: {
         session_id: this.props.session_id,
-      }),
+      },
     }).then(() => {
       this.props.onLogOut();
     });
+
+    // fetchApi(`${API_URL}/authentication/session?api_key=${API_KEY_3}`, {
+    //   method: "DELETE",
+    //   mode: "cors",
+    //   headers: {
+    //     "Content-type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     session_id: this.props.session_id,
+    //   }),
+    // }).then(() => {
+    //   this.props.onLogOut();
+    // });
   };
 
   render() {
@@ -61,14 +69,4 @@ class UserMenu extends Component {
   }
 }
 
-const UserMenuContainer = props => {
-  return (
-    <AppContext.Consumer>
-      {context => {
-        return <UserMenu {...context} {...props} />;
-      }}
-    </AppContext.Consumer>
-  );
-};
-
-export default UserMenuContainer;
+export default AppContextHOC(UserMenu);
