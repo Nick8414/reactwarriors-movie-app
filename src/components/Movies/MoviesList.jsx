@@ -1,64 +1,27 @@
-import React, { Component } from "react";
+import React from "react";
 import MovieItem from "./MovieItem";
-import { API_URL, API_KEY_3 } from "../../api/api";
+import PropTypes from "prop-types";
+import MoviesHOC from "./MoviesHOC";
+import AppContextHOC from "../HOC/AppContextHOC";
 
-export default class MovieList extends Component {
-  constructor() {
-    super();
+const MoviesList = ({ movies, user, session_id }) => (
+  <div className="row">
+    {movies.map(movie => {
+      return (
+        <div key={movie.id} className="col-6 mb-4">
+          <MovieItem item={movie} />
+        </div>
+      );
+    })}
+  </div>
+);
 
-    this.state = {
-      movies: []
-    };
-  }
+MoviesList.defaultProps = {
+  movies: [],
+};
 
-  getMovies = (filters, page) => {
-    const { sort_by } = filters;
-    const link = `${API_URL}/discover/movie?api_key=${API_KEY_3}&language=ru-RU&sort_by=${sort_by}&page=${page}`;
-    fetch(link)
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        this.setState({
-          movies: data.results
-        });
-      });
-  }
+MoviesList.propTypes = {
+  movies: PropTypes.array.isRequired,
+};
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.filters.sort_by !== this.props.filters.sort_by) {
-      this.getMovies(nextProps.filters)
-    }
-  }
-
-  componentDidMount() {
-    // const sort_by = this.props.filters.sort_by
-    this.getMovies(this.props.filters)
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.filters.sort_by !== this.props.filters.sort_by) {
-      this.props.onChangePage(1);
-      this.getMovies(this.props.filters, 1);
-    }
-
-    if (this.props.page !== prevProps.page) {
-      this.getMovies(this.props.filters, this.props.page);
-    }
-  }
-
-  render() {
-    const { movies } = this.state;
-    return (
-      <div className="row">
-        {movies.map(movie => {
-          return (
-            <div key={movie.id} className="col-6 mb-4">
-              <MovieItem item={movie} />
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-}
+export default MoviesHOC(AppContextHOC(MoviesList));
