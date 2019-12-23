@@ -2,8 +2,9 @@ import React from "react";
 import Filters from "./Filters/Filters";
 import MoviesList from "./Movies/MoviesList";
 import Header from "./Header/Header";
-import CallApi, { API_URL, API_KEY_3, fetchApi } from "../api/api";
+import { API_URL, API_KEY_3, fetchApi } from "../api/api";
 import Cookies from "universal-cookie";
+import { getFavorites, getWatchList } from "../helpers/getDataFromServer";
 
 const cookies = new Cookies();
 
@@ -21,18 +22,18 @@ export default class App extends React.Component {
       filters: {
         sort_by: "vote_average.asc",
         primary_release_year: 2019,
-        with_genres: [],
+        with_genres: []
       },
       pagination: {
         page: 1,
-        total_pages: 0,
-      },
+        total_pages: 0
+      }
     };
   }
 
   updateUser = user => {
     this.setState({
-      user,
+      user
     });
   };
 
@@ -40,27 +41,27 @@ export default class App extends React.Component {
     cookies.remove("session_id");
     this.setState({
       session_id: null,
-      user: null,
+      user: null
     });
   };
 
   updateSessionId = session_id => {
     cookies.set("session_id", session_id, {
       path: "/",
-      maxAge: 2592000,
+      maxAge: 2592000
     });
     this.setState({
-      session_id,
+      session_id
     });
   };
 
   onChangeFilters = event => {
     const newFilters = {
       ...this.state.filters,
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.value
     };
     this.setState({
-      filters: newFilters,
+      filters: newFilters
     });
   };
 
@@ -68,8 +69,8 @@ export default class App extends React.Component {
     this.setState(prevState => ({
       pagination: {
         ...prevState.pagination,
-        [key]: value,
-      },
+        [key]: value
+      }
     }));
   };
 
@@ -78,49 +79,49 @@ export default class App extends React.Component {
       filters: {
         sort_by: "vote_average.asc",
         primary_release_year: 2019,
-        with_genres: "",
+        with_genres: ""
       },
-      page: 1,
+      page: 1
     });
   };
 
   setFavorites = favorites => {
     this.setState({
-      favorites,
+      favorites
     });
   };
 
-  deleteFromFavorites = movieId => {
-    const newFavorites = this.state.favorites.filter(el => el !== movieId);
+  deleteFromFavorites = movie => {
+    const newFavorites = this.state.favorites.filter(el => el.id !== movie.id);
     this.setState({
-      favorites: newFavorites,
+      favorites: newFavorites
     });
   };
 
-  addToFavorites = movieId => {
-    const newFavorites = [...this.state.favorites, movieId];
+  addToFavorites = movie => {
+    const newFavorites = [...this.state.favorites, movie];
     this.setState({
-      favorites: newFavorites,
+      favorites: newFavorites
     });
   };
 
   setWatchList = watchList => {
     this.setState({
-      watchList,
+      watchList
     });
   };
 
-  deleteFromWatchList = movieId => {
-    const newWatchList = this.state.watchList.filter(el => el !== movieId);
+  deleteFromWatchList = movie => {
+    const newWatchList = this.state.watchList.filter(el => el.id !== movie.id);
     this.setState({
-      watchList: newWatchList,
+      watchList: newWatchList
     });
   };
 
-  addToWatchList = movieId => {
-    const newWatchList = [...this.state.watchList, movieId];
+  addToWatchList = movie => {
+    const newWatchList = [...this.state.watchList, movie];
     this.setState({
-      watchList: newWatchList,
+      watchList: newWatchList
     });
   };
 
@@ -135,29 +136,13 @@ export default class App extends React.Component {
       const queryStringParams = {
         api_key: API_KEY_3,
         session_id,
-        language: "ru-RU",
+        language: "ru-RU"
       };
 
-      const favoriteMovies = await CallApi.get(
-        `/account/${user.id}/favorite/movies`,
-        {
-          params: queryStringParams,
-        }
-      );
-
-      const favoriteMoviesIds = favoriteMovies.results.map(el => el.id);
-      this.setFavorites(favoriteMoviesIds);
-
-      const watchList = await CallApi.get(
-        `/account/${user.id}/watchlist/movies`,
-        {
-          params: queryStringParams,
-        }
-      );
-
-      const watchListsIds = watchList.results.map(el => el.id);
-      this.setWatchList(watchListsIds);
-
+      const favoriteMovies = await getFavorites(user, queryStringParams);
+      const watchList = await getWatchList(user, queryStringParams);
+      this.setFavorites(favoriteMovies.results);
+      this.setWatchList(watchList.results);
       this.updateSessionId(session_id);
     }
   }
@@ -169,7 +154,7 @@ export default class App extends React.Component {
       user,
       session_id,
       favorites,
-      watchList,
+      watchList
     } = this.state;
     return (
       <AppContext.Provider
@@ -186,7 +171,7 @@ export default class App extends React.Component {
           addToFavorites: this.addToFavorites,
           setWatchList: this.setWatchList,
           addToWatchList: this.addToWatchList,
-          deleteFromWatchList: this.deleteFromWatchList,
+          deleteFromWatchList: this.deleteFromWatchList
         }}
       >
         <React.Fragment>
