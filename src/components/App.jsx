@@ -2,8 +2,9 @@ import React from "react";
 import Filters from "./Filters/Filters";
 import MoviesList from "./Movies/MoviesList";
 import Header from "./Header/Header";
-import CallApi, { API_URL, API_KEY_3, fetchApi } from "../api/api";
+import { API_URL, API_KEY_3, fetchApi } from "../api/api";
 import Cookies from "universal-cookie";
+import { getFavorites, getWatchList } from "../helpers/getDataFromServer";
 
 const cookies = new Cookies();
 
@@ -138,27 +139,10 @@ export default class App extends React.Component {
         language: "ru-RU"
       };
 
-      const favoriteMovies = await CallApi.get(
-        `/account/${user.id}/favorite/movies`,
-        {
-          params: queryStringParams
-        }
-      );
-
-      console.log(favoriteMovies);
-      // const favoriteMoviesIds = favoriteMovies.results.map(el => el.id);
+      const favoriteMovies = await getFavorites(user, queryStringParams);
+      const watchList = await getWatchList(user, queryStringParams);
       this.setFavorites(favoriteMovies.results);
-
-      const watchList = await CallApi.get(
-        `/account/${user.id}/watchlist/movies`,
-        {
-          params: queryStringParams
-        }
-      );
-
-      //const watchListsIds = watchList.results.map(el => el.id);
       this.setWatchList(watchList.results);
-
       this.updateSessionId(session_id);
     }
   }
