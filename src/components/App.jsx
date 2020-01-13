@@ -4,7 +4,7 @@ import MoviesList from "./Movies/MoviesList";
 import Header from "./Header/Header";
 import { API_URL, API_KEY_3, fetchApi } from "../api/api";
 import Cookies from "universal-cookie";
-import { getFavorites, getWatchList } from "../helpers/getDataFromServer";
+import CallApi from "../api/api";
 
 const cookies = new Cookies();
 
@@ -27,31 +27,76 @@ export default class App extends React.Component {
       pagination: {
         page: 1,
         total_pages: 0
-      }
+      },
+      showLoginForm: false
     };
   }
 
-  updateUser = user => {
-    this.setState({
-      user
+  getFavorites = (user, queryStringParams) => {
+    return CallApi.get(`/account/${user.id}/favorite/movies`, {
+      params: queryStringParams
     });
+  };
+
+  getWatchList = (user, queryStringParams) => {
+    return CallApi.get(`/account/${user.id}/watchlist/movies`, {
+      params: queryStringParams
+    });
+  };
+
+  // updateSessionId = session_id => {
+  //   cookies.set("session_id", session_id, {
+  //     path: "/",
+  //     maxAge: 2592000
+  //   });
+  //   this.setState({
+  //     session_id
+  //   });
+  // };
+
+  updateUser = (user, session_id) => {
+    console.log("update user");
+    cookies.set("session_id", session_id, {
+      path: "/",
+      maxAge: 2592000
+    });
+
+    this.setState(
+      {
+        session_id,
+        user
+      },
+      async () => {
+        const queryStringParams = {
+          api_key: API_KEY_3,
+          session_id: this.state.session_id,
+          language: "ru-RU"
+        };
+
+        const favoriteMovies = await this.getFavorites(user, queryStringParams);
+        const watchList = await this.getWatchList(user, queryStringParams);
+        console.log("watchList");
+        console.log(watchList);
+
+        this.setFavorites(favoriteMovies.results);
+        this.setWatchList(watchList.results);
+      }
+    );
+  };
+
+  toggleLoginForm = () => {
+    this.setState(prevState => ({
+      showLoginForm: !prevState.showLoginForm
+    }));
   };
 
   onLogOut = () => {
     cookies.remove("session_id");
     this.setState({
       session_id: null,
-      user: null
-    });
-  };
-
-  updateSessionId = session_id => {
-    cookies.set("session_id", session_id, {
-      path: "/",
-      maxAge: 2592000
-    });
-    this.setState({
-      session_id
+      user: null,
+      favorites: [],
+      watchList: []
     });
   };
 
@@ -132,18 +177,18 @@ export default class App extends React.Component {
       const user = await fetchApi(
         `${API_URL}/account?api_key=${API_KEY_3}&session_id=${session_id}`
       );
-      this.updateUser(user);
+      //this.updateSessionId(session_id);
+      this.updateUser(user, session_id);
       const queryStringParams = {
         api_key: API_KEY_3,
         session_id,
         language: "ru-RU"
       };
 
-      const favoriteMovies = await getFavorites(user, queryStringParams);
-      const watchList = await getWatchList(user, queryStringParams);
+      const favoriteMovies = await this.getFavorites(user, queryStringParams);
+      const watchList = await this.getWatchList(user, queryStringParams);
       this.setFavorites(favoriteMovies.results);
       this.setWatchList(watchList.results);
-      this.updateSessionId(session_id);
     }
   }
 
@@ -154,7 +199,8 @@ export default class App extends React.Component {
       user,
       session_id,
       favorites,
-      watchList
+      watchList,
+      showLoginForm
     } = this.state;
     return (
       <AppContext.Provider
@@ -163,6 +209,7 @@ export default class App extends React.Component {
           session_id: session_id,
           favorites: favorites,
           watchList: watchList,
+          showLoginForm: showLoginForm,
           updateSessionId: this.updateSessionId,
           updateUser: this.updateUser,
           onLogOut: this.onLogOut,
@@ -171,7 +218,8 @@ export default class App extends React.Component {
           addToFavorites: this.addToFavorites,
           setWatchList: this.setWatchList,
           addToWatchList: this.addToWatchList,
-          deleteFromWatchList: this.deleteFromWatchList
+          deleteFromWatchList: this.deleteFromWatchList,
+          toggleLoginForm: this.toggleLoginForm
         }}
       >
         <React.Fragment>

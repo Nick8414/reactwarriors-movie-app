@@ -14,36 +14,41 @@ class WatchListIcon extends React.Component {
       user,
       session_id,
       addToWatchList,
-      deleteFromWatchList
+      deleteFromWatchList,
+      toggleLoginForm
     } = this.props;
 
-    const queryStringParams = {
-      session_id,
-      language: "ru-RU"
-    };
+    if (user) {
+      const queryStringParams = {
+        session_id,
+        language: "ru-RU"
+      };
 
-    try {
-      this.setState({ status: true });
-      const result = await CallApi.post(`/account/${user.id}/watchlist`, {
-        params: queryStringParams,
-        body: {
-          media_type: "movie",
-          media_id: movie.id,
-          watchlist: watchlistStatus
+      try {
+        this.setState({ status: true });
+        const result = await CallApi.post(`/account/${user.id}/watchlist`, {
+          params: queryStringParams,
+          body: {
+            media_type: "movie",
+            media_id: movie.id,
+            watchlist: watchlistStatus
+          }
+        });
+
+        if (result.status_code === 1) {
+          addToWatchList(movie);
         }
-      });
 
-      if (result.status_code === 1) {
-        addToWatchList(movie);
+        if (result.status_code === 13) {
+          deleteFromWatchList(movie);
+        }
+
+        this.setState({ status: false });
+      } catch (err) {
+        console.log(err);
       }
-
-      if (result.status_code === 13) {
-        deleteFromWatchList(movie);
-      }
-
-      this.setState({ status: false });
-    } catch (err) {
-      console.log(err);
+    } else {
+      toggleLoginForm();
     }
   }
 
