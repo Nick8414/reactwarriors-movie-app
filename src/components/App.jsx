@@ -85,9 +85,15 @@ export default class App extends React.Component {
   };
 
   toggleLoginForm = () => {
-    this.setState(prevState => ({
-      showLoginForm: !prevState.showLoginForm
-    }));
+    console.log("toogle login form");
+    this.setState(
+      prevState => ({
+        showLoginForm: !prevState.showLoginForm
+      }),
+      () => {
+        console.log("this. statr=>" + this.state.showLoginForm);
+      }
+    );
   };
 
   onLogOut = () => {

@@ -91,6 +91,7 @@ class LoginForm extends React.Component {
           this.props.updateUser(user, session_id);
         }
       );
+      this.props.toggleLoginForm();
 
       const queryStringParams = {
         session_id,

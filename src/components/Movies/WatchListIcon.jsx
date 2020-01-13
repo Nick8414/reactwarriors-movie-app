@@ -48,7 +48,7 @@ class WatchListIcon extends React.Component {
         console.log(err);
       }
     } else {
-      toggleLoginForm();
+      //  toggleLoginForm();
     }
   }
 
