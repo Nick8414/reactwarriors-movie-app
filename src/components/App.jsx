@@ -1,7 +1,9 @@
 import React from "react";
-import Filters from "./Filters/Filters";
-import MoviesList from "./Movies/MoviesList";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Header from "./Header/Header";
+import MoviesPages from "./pages/MoviesPage/MoviesPage";
+import MoviePage from "./pages/MoviePage/MoviePage";
+
 import { API_URL, API_KEY_3, fetchApi } from "../api/api";
 import Cookies from "universal-cookie";
 import CallApi from "../api/api";
@@ -19,15 +21,6 @@ export default class App extends React.Component {
       favorites: [],
       watchList: [],
       session_id: null,
-      filters: {
-        sort_by: "vote_average.asc",
-        primary_release_year: 2019,
-        with_genres: []
-      },
-      pagination: {
-        page: 1,
-        total_pages: 0
-      },
       showLoginForm: false
     };
   }
@@ -43,16 +36,6 @@ export default class App extends React.Component {
       params: queryStringParams
     });
   };
-
-  // updateSessionId = session_id => {
-  //   cookies.set("session_id", session_id, {
-  //     path: "/",
-  //     maxAge: 2592000
-  //   });
-  //   this.setState({
-  //     session_id
-  //   });
-  // };
 
   updateUser = (user, session_id) => {
     console.log("update user");
@@ -75,8 +58,6 @@ export default class App extends React.Component {
 
         const favoriteMovies = await this.getFavorites(user, queryStringParams);
         const watchList = await this.getWatchList(user, queryStringParams);
-        console.log("watchList");
-        console.log(watchList);
 
         this.setFavorites(favoriteMovies.results);
         this.setWatchList(watchList.results);
@@ -86,14 +67,9 @@ export default class App extends React.Component {
 
   toggleLoginForm = () => {
     console.log("toogle login form");
-    this.setState(
-      prevState => ({
-        showLoginForm: !prevState.showLoginForm
-      }),
-      () => {
-        console.log("this. statr=>" + this.state.showLoginForm);
-      }
-    );
+    this.setState(prevState => ({
+      showLoginForm: !prevState.showLoginForm
+    }));
   };
 
   onLogOut = () => {
@@ -103,36 +79,6 @@ export default class App extends React.Component {
       user: null,
       favorites: [],
       watchList: []
-    });
-  };
-
-  onChangeFilters = event => {
-    const newFilters = {
-      ...this.state.filters,
-      [event.target.name]: event.target.value
-    };
-    this.setState({
-      filters: newFilters
-    });
-  };
-
-  onChangePagination = (key, value) => {
-    this.setState(prevState => ({
-      pagination: {
-        ...prevState.pagination,
-        [key]: value
-      }
-    }));
-  };
-
-  setDefaultFilters = () => {
-    this.setState({
-      filters: {
-        sort_by: "vote_average.asc",
-        primary_release_year: 2019,
-        with_genres: ""
-      },
-      page: 1
     });
   };
 
@@ -200,8 +146,6 @@ export default class App extends React.Component {
 
   render() {
     const {
-      filters,
-      pagination,
       user,
       session_id,
       favorites,
@@ -209,59 +153,40 @@ export default class App extends React.Component {
       showLoginForm
     } = this.state;
     return (
-      <AppContext.Provider
-        value={{
-          user: user,
-          session_id: session_id,
-          favorites: favorites,
-          watchList: watchList,
-          showLoginForm: showLoginForm,
-          updateSessionId: this.updateSessionId,
-          updateUser: this.updateUser,
-          onLogOut: this.onLogOut,
-          setFavorites: this.setFavorites,
-          deleteFromFavorites: this.deleteFromFavorites,
-          addToFavorites: this.addToFavorites,
-          setWatchList: this.setWatchList,
-          addToWatchList: this.addToWatchList,
-          deleteFromWatchList: this.deleteFromWatchList,
-          toggleLoginForm: this.toggleLoginForm
-        }}
-      >
-        <React.Fragment>
-          <Header
-            user={user}
-            updateSessionId={this.updateSessionId}
-            logOff={this.logOff}
-          />
-          <div className="container">
-            <div className="row mt-4">
-              <div className="col-4">
-                <div className="card" style={{ width: "100%" }}>
-                  <div className="card-body">
-                    <h3>Фильтры:</h3>
-                    <Filters
-                      pagination={pagination}
-                      filters={filters}
-                      onChangeFilters={this.onChangeFilters}
-                      onChangePagination={this.onChangePagination}
-                      onChangeFiltersGenre={this.onChangeFiltersGenre}
-                      setDefaultFilters={this.setDefaultFilters}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-8">
-                <MoviesList
-                  filters={filters}
-                  pagination={pagination}
-                  onChangePagination={this.onChangePagination}
-                />
-              </div>
-            </div>
-          </div>
-        </React.Fragment>
-      </AppContext.Provider>
+      <Router>
+        <AppContext.Provider
+          value={{
+            user: user,
+            session_id: session_id,
+            favorites: favorites,
+            watchList: watchList,
+            showLoginForm: showLoginForm,
+            updateSessionId: this.updateSessionId,
+            updateUser: this.updateUser,
+            onLogOut: this.onLogOut,
+            setFavorites: this.setFavorites,
+            deleteFromFavorites: this.deleteFromFavorites,
+            addToFavorites: this.addToFavorites,
+            setWatchList: this.setWatchList,
+            addToWatchList: this.addToWatchList,
+            deleteFromWatchList: this.deleteFromWatchList,
+            toggleLoginForm: this.toggleLoginForm
+          }}
+        >
+          <React.Fragment>
+            <Header
+              user={user}
+              updateSessionId={this.updateSessionId}
+              logOff={this.logOff}
+            />
+            <Link to="/movie">go to movie</Link>
+            {/* <MoviesPages /> */}
+            <hr />
+            <Route exact path="/" component={MoviesPages} />
+            <Route path="/movie" component={MoviePage} />
+          </React.Fragment>
+        </AppContext.Provider>
+      </Router>
     );
   }
 }

@@ -50,7 +50,7 @@ class FavoriteIcon extends React.Component {
         console.log(err);
       }
     } else {
-      // toggleLoginForm();
+      toggleLoginForm();
     }
   }
 
