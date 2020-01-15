@@ -179,11 +179,9 @@ export default class App extends React.Component {
               updateSessionId={this.updateSessionId}
               logOff={this.logOff}
             />
-            <Link to="/movie">go to movie</Link>
-            {/* <MoviesPages /> */}
-            <hr />
+            {/* <Link to="/movie">go to movie</Link> */}
             <Route exact path="/" component={MoviesPages} />
-            <Route path="/movie" component={MoviePage} />
+            <Route path="/movie/:id" component={MoviePage} />
           </React.Fragment>
         </AppContext.Provider>
       </Router>
