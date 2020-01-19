@@ -10,7 +10,7 @@ class Header extends React.Component {
         <div className="container">
           <ul className="navbar-nav">
             <li className="nav-item-active">
-              <a className="nav-link" href="google.com">
+              <a className="nav-link header__home-link" href="/">
                 Home
               </a>
             </li>

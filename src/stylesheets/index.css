@@ -13,3 +13,11 @@ input.invalid {
 .material-icons:hover {
   cursor: pointer;
 }
+.header__home-link {
+  font-weight: 600;
+  color: #fdfdfd;
+}
+a.nav-link{
+  text-decoration: none;
+  color: black;
+}
