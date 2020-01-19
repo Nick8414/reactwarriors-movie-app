@@ -2,6 +2,7 @@ import React from "react";
 import AppContextHOC from "../HOC/AppContextHOC";
 import FavoriteIcon from "../Movies/FavoriteIcon";
 import WatchListIcon from "../Movies/WatchListIcon";
+import { Link } from "react-router-dom";
 
 class MovieItem extends React.Component {
   render() {
@@ -16,7 +17,9 @@ class MovieItem extends React.Component {
           alt=""
         />
         <div className="card-body">
-          <h6 className="card-title">{item.title}</h6>
+          <Link className="card-title" to={`/movie/${item.id}`}>
+            {item.title}
+          </Link>
           <div className="card-text">Рейтинг: {item.vote_average}</div>
 
           <FavoriteIcon item={item} />

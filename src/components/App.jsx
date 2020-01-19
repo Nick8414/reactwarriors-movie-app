@@ -1,10 +1,12 @@
 import React from "react";
-import Filters from "./Filters/Filters";
-import MoviesList from "./Movies/MoviesList";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Header from "./Header/Header";
+import MoviesPages from "./pages/MoviesPage/MoviesPage";
+import MoviePage from "./pages/MoviePage/MoviePage";
+
 import { API_URL, API_KEY_3, fetchApi } from "../api/api";
 import Cookies from "universal-cookie";
-import { getFavorites, getWatchList } from "../helpers/getDataFromServer";
+import CallApi from "../api/api";
 
 const cookies = new Cookies();
 
@@ -19,69 +21,64 @@ export default class App extends React.Component {
       favorites: [],
       watchList: [],
       session_id: null,
-      filters: {
-        sort_by: "vote_average.asc",
-        primary_release_year: 2019,
-        with_genres: []
-      },
-      pagination: {
-        page: 1,
-        total_pages: 0
-      }
+      showLoginForm: false
     };
   }
 
-  updateUser = user => {
-    this.setState({
-      user
+  getFavorites = (user, queryStringParams) => {
+    return CallApi.get(`/account/${user.id}/favorite/movies`, {
+      params: queryStringParams
     });
+  };
+
+  getWatchList = (user, queryStringParams) => {
+    return CallApi.get(`/account/${user.id}/watchlist/movies`, {
+      params: queryStringParams
+    });
+  };
+
+  updateUser = (user, session_id) => {
+    console.log("update user");
+    cookies.set("session_id", session_id, {
+      path: "/",
+      maxAge: 2592000
+    });
+
+    this.setState(
+      {
+        session_id,
+        user
+      },
+      async () => {
+        const queryStringParams = {
+          api_key: API_KEY_3,
+          session_id: this.state.session_id,
+          language: "ru-RU"
+        };
+
+        const favoriteMovies = await this.getFavorites(user, queryStringParams);
+        const watchList = await this.getWatchList(user, queryStringParams);
+
+        this.setFavorites(favoriteMovies.results);
+        this.setWatchList(watchList.results);
+      }
+    );
+  };
+
+  toggleLoginForm = () => {
+    console.log("toogle login form");
+    this.setState(prevState => ({
+      showLoginForm: !prevState.showLoginForm
+    }));
   };
 
   onLogOut = () => {
     cookies.remove("session_id");
     this.setState({
       session_id: null,
-      user: null
-    });
-  };
-
-  updateSessionId = session_id => {
-    cookies.set("session_id", session_id, {
-      path: "/",
-      maxAge: 2592000
-    });
-    this.setState({
-      session_id
-    });
-  };
-
-  onChangeFilters = event => {
-    const newFilters = {
-      ...this.state.filters,
-      [event.target.name]: event.target.value
-    };
-    this.setState({
-      filters: newFilters
-    });
-  };
-
-  onChangePagination = (key, value) => {
-    this.setState(prevState => ({
-      pagination: {
-        ...prevState.pagination,
-        [key]: value
-      }
-    }));
-  };
-
-  setDefaultFilters = () => {
-    this.setState({
-      filters: {
-        sort_by: "vote_average.asc",
-        primary_release_year: 2019,
-        with_genres: ""
-      },
-      page: 1
+      user: null,
+      favorites: [],
+      watchList: []
     });
   };
 
@@ -132,82 +129,62 @@ export default class App extends React.Component {
       const user = await fetchApi(
         `${API_URL}/account?api_key=${API_KEY_3}&session_id=${session_id}`
       );
-      this.updateUser(user);
+      //this.updateSessionId(session_id);
+      this.updateUser(user, session_id);
       const queryStringParams = {
         api_key: API_KEY_3,
         session_id,
         language: "ru-RU"
       };
 
-      const favoriteMovies = await getFavorites(user, queryStringParams);
-      const watchList = await getWatchList(user, queryStringParams);
+      const favoriteMovies = await this.getFavorites(user, queryStringParams);
+      const watchList = await this.getWatchList(user, queryStringParams);
       this.setFavorites(favoriteMovies.results);
       this.setWatchList(watchList.results);
-      this.updateSessionId(session_id);
     }
   }
 
   render() {
     const {
-      filters,
-      pagination,
       user,
       session_id,
       favorites,
-      watchList
+      watchList,
+      showLoginForm
     } = this.state;
     return (
-      <AppContext.Provider
-        value={{
-          user: user,
-          session_id: session_id,
-          favorites: favorites,
-          watchList: watchList,
-          updateSessionId: this.updateSessionId,
-          updateUser: this.updateUser,
-          onLogOut: this.onLogOut,
-          setFavorites: this.setFavorites,
-          deleteFromFavorites: this.deleteFromFavorites,
-          addToFavorites: this.addToFavorites,
-          setWatchList: this.setWatchList,
-          addToWatchList: this.addToWatchList,
-          deleteFromWatchList: this.deleteFromWatchList
-        }}
-      >
-        <React.Fragment>
-          <Header
-            user={user}
-            updateSessionId={this.updateSessionId}
-            logOff={this.logOff}
-          />
-          <div className="container">
-            <div className="row mt-4">
-              <div className="col-4">
-                <div className="card" style={{ width: "100%" }}>
-                  <div className="card-body">
-                    <h3>Фильтры:</h3>
-                    <Filters
-                      pagination={pagination}
-                      filters={filters}
-                      onChangeFilters={this.onChangeFilters}
-                      onChangePagination={this.onChangePagination}
-                      onChangeFiltersGenre={this.onChangeFiltersGenre}
-                      setDefaultFilters={this.setDefaultFilters}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-8">
-                <MoviesList
-                  filters={filters}
-                  pagination={pagination}
-                  onChangePagination={this.onChangePagination}
-                />
-              </div>
-            </div>
-          </div>
-        </React.Fragment>
-      </AppContext.Provider>
+      <Router>
+        <AppContext.Provider
+          value={{
+            user: user,
+            session_id: session_id,
+            favorites: favorites,
+            watchList: watchList,
+            showLoginForm: showLoginForm,
+            updateSessionId: this.updateSessionId,
+            updateUser: this.updateUser,
+            onLogOut: this.onLogOut,
+            setFavorites: this.setFavorites,
+            deleteFromFavorites: this.deleteFromFavorites,
+            addToFavorites: this.addToFavorites,
+            setWatchList: this.setWatchList,
+            addToWatchList: this.addToWatchList,
+            deleteFromWatchList: this.deleteFromWatchList,
+            toggleLoginForm: this.toggleLoginForm
+          }}
+        >
+          <React.Fragment>
+            <Header
+              user={user}
+              updateSessionId={this.updateSessionId}
+              logOff={this.logOff}
+            />
+            {/* <Link to="/movie">go to movie</Link> */}
+            <Route exact path="/" component={MoviesPages} />
+            <Route path="/movie/:id" component={MoviePage} />
+          </React.Fragment>
+        </AppContext.Provider>
+      </Router>
     );
   }
 }

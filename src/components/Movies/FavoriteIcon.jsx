@@ -16,36 +16,41 @@ class FavoriteIcon extends React.Component {
       user,
       session_id,
       deleteFromFavorites,
-      addToFavorites
+      addToFavorites,
+      toggleLoginForm
     } = this.props;
 
-    const queryStringParams = {
-      session_id,
-      language: "ru-RU"
-    };
+    if (user) {
+      const queryStringParams = {
+        session_id,
+        language: "ru-RU"
+      };
 
-    try {
-      this.setState({ status: true });
-      const result = await CallApi.post(`/account/${user.id}/favorite`, {
-        params: queryStringParams,
-        body: {
-          media_type: "movie",
-          media_id: movie.id,
-          favorite: favoriteStatus
+      try {
+        this.setState({ status: true });
+        const result = await CallApi.post(`/account/${user.id}/favorite`, {
+          params: queryStringParams,
+          body: {
+            media_type: "movie",
+            media_id: movie.id,
+            favorite: favoriteStatus
+          }
+        });
+
+        if (result.status_code === 1) {
+          addToFavorites(movie);
         }
-      });
 
-      if (result.status_code === 1) {
-        addToFavorites(movie);
+        if (result.status_code === 13) {
+          deleteFromFavorites(movie);
+        }
+
+        this.setState({ status: false });
+      } catch (err) {
+        console.log(err);
       }
-
-      if (result.status_code === 13) {
-        deleteFromFavorites(movie);
-      }
-
-      this.setState({ status: false });
-    } catch (err) {
-      console.log(err);
+    } else {
+      toggleLoginForm();
     }
   }
 
