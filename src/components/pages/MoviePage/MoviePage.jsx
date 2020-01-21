@@ -75,7 +75,7 @@ export default class MoviePage extends React.Component {
                   tag={RRNavLink}
                   to={`/movie/${movie.id}/videos`}
                 >
-                  Похожие фильмы
+                  Видео
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -93,18 +93,23 @@ export default class MoviePage extends React.Component {
                 <Row>
                   <Col sm='12'>
                     <Switch>
-                      <Route exact path='/movie/:id/details'>
-                        <MovieDetail movie={movie} />
-                      </Route>
+                      <Route
+                        exact
+                        path='/movie/:id/details'
+                        component={() => <MovieDetail movie={movie} />}
+                      />
+
                       <Route
                         exact
                         path='/movie/:id/videos'
                         component={MovieVideos}
                       />
 
-                      <Route exact path='/movie/:id/credits'>
-                        <MovieCredits id={movie.id} />
-                      </Route>
+                      <Route
+                        exact
+                        path='/movie/:id/credits'
+                        component={MovieCredits}
+                      />
                     </Switch>
                   </Col>
                 </Row>
