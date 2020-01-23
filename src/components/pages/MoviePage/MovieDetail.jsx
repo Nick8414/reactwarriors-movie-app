@@ -1,5 +1,4 @@
 import React from 'react'
-import { Table } from 'reactstrap'
 
 class MovieDetail extends React.Component {
   constructor (props) {
@@ -11,10 +10,8 @@ class MovieDetail extends React.Component {
 
   render () {
     const { movie } = this.props
-    console.log(movie.production_countries)
-    //const countries = movie.production_countries.map(item => item.name).join(', ')
     return (
-      <Table>
+      <table className='table'>
         <tbody>
           <tr>
             <td>Статус</td>
@@ -69,7 +66,7 @@ class MovieDetail extends React.Component {
             </td>
           </tr>
         </tbody>
-      </Table>
+      </table>
     )
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Header from './Header/Header'
 import MoviesPages from './pages/MoviesPage/MoviesPage'
 import MoviePage from './pages/MoviePage/MoviePage'
@@ -38,7 +38,6 @@ export default class App extends React.Component {
   }
 
   updateUser = (user, session_id) => {
-    console.log('update user')
     cookies.set('session_id', session_id, {
       path: '/',
       maxAge: 2592000
@@ -147,26 +146,26 @@ export default class App extends React.Component {
   render () {
     const { user, session_id, favorites, watchList, showLoginForm } = this.state
     return (
-      <AppContext.Provider
-        value={{
-          user: user,
-          session_id: session_id,
-          favorites: favorites,
-          watchList: watchList,
-          showLoginForm: showLoginForm,
-          updateSessionId: this.updateSessionId,
-          updateUser: this.updateUser,
-          onLogOut: this.onLogOut,
-          setFavorites: this.setFavorites,
-          deleteFromFavorites: this.deleteFromFavorites,
-          addToFavorites: this.addToFavorites,
-          setWatchList: this.setWatchList,
-          addToWatchList: this.addToWatchList,
-          deleteFromWatchList: this.deleteFromWatchList,
-          toggleLoginForm: this.toggleLoginForm
-        }}
-      >
-        <Router>
+      <Router>
+        <AppContext.Provider
+          value={{
+            user: user,
+            session_id: session_id,
+            favorites: favorites,
+            watchList: watchList,
+            showLoginForm: showLoginForm,
+            updateSessionId: this.updateSessionId,
+            updateUser: this.updateUser,
+            onLogOut: this.onLogOut,
+            setFavorites: this.setFavorites,
+            deleteFromFavorites: this.deleteFromFavorites,
+            addToFavorites: this.addToFavorites,
+            setWatchList: this.setWatchList,
+            addToWatchList: this.addToWatchList,
+            deleteFromWatchList: this.deleteFromWatchList,
+            toggleLoginForm: this.toggleLoginForm
+          }}
+        >
           <React.Fragment>
             <Header
               user={user}
@@ -177,8 +176,8 @@ export default class App extends React.Component {
             <Route exact path='/' component={MoviesPages} />
             <Route path='/movie/:id' component={MoviePage} />
           </React.Fragment>
-        </Router>
-      </AppContext.Provider>
+        </AppContext.Provider>
+      </Router>
     )
   }
 }
