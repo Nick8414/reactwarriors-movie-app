@@ -7,6 +7,7 @@ import MoviePage from './pages/MoviePage/MoviePage'
 import { API_URL, API_KEY_3, fetchApi } from '../api/api'
 import Cookies from 'universal-cookie'
 import CallApi from '../api/api'
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
 const cookies = new Cookies()
 

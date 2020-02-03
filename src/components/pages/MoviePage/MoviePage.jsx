@@ -6,6 +6,7 @@ import { Route, NavLink, Switch } from 'react-router-dom'
 import MovieDetail from './MovieDetail'
 import MovieVideos from './MovieVideos'
 import MovieCredits from './MovieCredits'
+import MovieTab from './MovieTab'
 
 export default class MoviePage extends React.Component {
   constructor () {
@@ -49,8 +50,8 @@ export default class MoviePage extends React.Component {
               />
             </div>
             <div className='col-8'>
-              <h2 className='title mb-4'>{movie && movie.title}</h2>
-              <p className='mb-4'>{movie && movie.overview}</p>
+              <h2 className='title mb-4'>{movie.title}</h2>
+              <p className='mb-4'>{movie.overview}</p>
               <span>Рейтинг Пользователей: {movie.vote_average}</span>
               <div>
                 <FavoriteIcon item={movie} />
@@ -62,32 +63,9 @@ export default class MoviePage extends React.Component {
             <div className='col-12'>
               <div>
                 <ul className='nav nav-tabs'>
-                  <li className='nav-item'>
-                    <NavLink
-                      to={`/movie/${movie.id}/details`}
-                      className='nav-link'
-                      activeClassName='active'
-                    >
-                      Детали
-                    </NavLink>
-                  </li>
-                  <li className='nav-item'>
-                    <NavLink
-                      to={`/movie/${movie.id}/videos`}
-                      className='nav-link'
-                    >
-                      Видео
-                    </NavLink>
-                  </li>
-
-                  <li className='nav-item'>
-                    <NavLink
-                      to={`/movie/${movie.id}/credits`}
-                      className='nav-link'
-                    >
-                      Актеры
-                    </NavLink>
-                  </li>
+                  <MovieTab movie={movie} name={'Детали'} />
+                  <MovieTab movie={movie} name={'Видео'} />
+                  <MovieTab movie={movie} name={'Актеры'} />
                 </ul>
                 <div className='tab-content'>
                   <Switch>
