@@ -41,6 +41,7 @@ export default class MoviePage extends React.Component {
       movie && (
         <div className='container'>
           <div className='row mt-4'>
+            {/* movie preview */}
             <div className='col-4'>
               <img
                 className='card-img-top card-img--height'
@@ -61,8 +62,10 @@ export default class MoviePage extends React.Component {
           </div>
           <div className='row mt-4'>
             <div className='col-12'>
+              {/* movie tabs */}
               <div>
-                <ul className='nav nav-tabs'>
+                {/* в отдельный компонент Виз Роутер */}
+                <ul className='nav nav-tabs'> 
                   <MovieTab movie={movie} name={'Детали'} />
                   <MovieTab movie={movie} name={'Видео'} />
                   <MovieTab movie={movie} name={'Актеры'} />
@@ -71,9 +74,9 @@ export default class MoviePage extends React.Component {
                   <Switch>
                     <Route
                       path={`/movie/:id/details`}
-                      component={() => <MovieDetail movie={movie} />}
+                      render={(routerProps) => <MovieDetail {...routerProps} movie={movie} />}
                     />
-                    <Route path={`/movie/:id/videos`} component={MovieVideos} />
+                    <Route path='/movie/:id/videos' component={MovieVideos} />
                     <Route
                       path={`/movie/:id/credits`}
                       component={MovieCredits}
