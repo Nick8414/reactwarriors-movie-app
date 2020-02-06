@@ -1,16 +1,25 @@
-import React from 'react'
-import MovieTab from './MovieTab'
+import React from "react";
+import MovieTab from "./MovieTab";
+import { withRouter } from "react-router-dom";
 
 function MovieTabs(props) {
-    const {movie} = props
-    return (
-        <ul className='nav nav-tabs'> 
-        <MovieTab movie={movie} name={'Детали'} />
-        <MovieTab movie={movie} name={'Видео'} />
-        <MovieTab movie={movie} name={'Актеры'} />
-      </ul>
-    )
-
+  const { movie, match } = props;
+  console.log(props);
+  return (
+    <ul className="nav nav-tabs">
+      <MovieTab
+        movie={match.params.id}
+        tabName={"Детали"}
+        tabLink={"details"}
+      />
+      <MovieTab movie={match.params.id} tabName={"Видео"} tabLink={"videos"} />
+      <MovieTab
+        movie={match.params.id}
+        tabName={"Актеры"}
+        tabLink={"credits"}
+      />
+    </ul>
+  );
 }
 
-export default MovieTabs
+export default withRouter(MovieTabs);
