@@ -1,5 +1,6 @@
 import React from 'react'
 import CallApi from '../../../api/api'
+import MovieCredit from './MovieCredit'
 
 export default class MovieCredits extends React.Component {
   constructor () {
@@ -26,20 +27,13 @@ export default class MovieCredits extends React.Component {
 
   render () {
     const { actor_gallery } = this.state
-    const elements = actor_gallery.map(item => {
-      return actor_gallery.length ? (
-        <span style={{ display: 'inline-block', margin: '5px' }} key={item.id}>
-          <img
-            style={{ height: '180px', width: '120px', cursor: 'pointer' }}
-            src={` https://image.tmdb.org/t/p/w500${item.profile_path}`}
-            alt=''
-            title={item.character}
-          />
-        </span>
+  
+    return <div>actor_gallery.map(item => {
+      actor_gallery.length ? (
+        <MovieCredit item={item} />
       ) : (
         <p>Актеры не найдены</p>
       )
-    })
-    return <div>{elements}</div>
+    })</div>
   }
 }

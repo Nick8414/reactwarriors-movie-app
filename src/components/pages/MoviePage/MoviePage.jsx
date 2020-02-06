@@ -1,19 +1,19 @@
 import React from 'react'
 import CallApi from '../../../api/api'
-import WatchListIcon from '../../Movies/WatchListIcon'
-import FavoriteIcon from '../../Movies/FavoriteIcon'
-import { Route, NavLink, Switch } from 'react-router-dom'
+
+import { Route, NavLink, Switch, withRouter } from 'react-router-dom'
 import MovieDetail from './MovieDetail'
 import MovieVideos from './MovieVideos'
 import MovieCredits from './MovieCredits'
-import MovieTab from './MovieTab'
+
+import MoviePreview from './MoviePreview'
+import MovieTabs from './MovieTabs'
 
 export default class MoviePage extends React.Component {
   constructor () {
     super()
     this.state = {
-      movie: null,
-      activeTab: '1'
+      movie: null
     }
   }
 
@@ -40,45 +40,28 @@ export default class MoviePage extends React.Component {
     return (
       movie && (
         <div className='container'>
-          <div className='row mt-4'>
-            {/* movie preview */}
-            <div className='col-4'>
-              <img
-                className='card-img-top card-img--height'
-                src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path ||
-                  movie.poster_path}`}
-                alt=''
-              />
-            </div>
-            <div className='col-8'>
-              <h2 className='title mb-4'>{movie.title}</h2>
-              <p className='mb-4'>{movie.overview}</p>
-              <span>Рейтинг Пользователей: {movie.vote_average}</span>
-              <div>
-                <FavoriteIcon item={movie} />
-                <WatchListIcon item={movie} />
-              </div>
-            </div>
-          </div>
+          
+          
+            <MoviePreview movie={movie} />
+          
           <div className='row mt-4'>
             <div className='col-12'>
-              {/* movie tabs */}
+
               <div>
                 {/* в отдельный компонент Виз Роутер */}
-                <ul className='nav nav-tabs'> 
-                  <MovieTab movie={movie} name={'Детали'} />
-                  <MovieTab movie={movie} name={'Видео'} />
-                  <MovieTab movie={movie} name={'Актеры'} />
-                </ul>
+                <withRouter>
+                <MovieTabs movie={movie} />
+                </withRouter>
+               
                 <div className='tab-content'>
                   <Switch>
                     <Route
-                      path={`/movie/:id/details`}
+                      path='/movie/:id/details'
                       render={(routerProps) => <MovieDetail {...routerProps} movie={movie} />}
                     />
                     <Route path='/movie/:id/videos' component={MovieVideos} />
                     <Route
-                      path={`/movie/:id/credits`}
+                      path='/movie/:id/credits'
                       component={MovieCredits}
                     />
                   </Switch>
