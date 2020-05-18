@@ -9,19 +9,19 @@ class LoginForm extends React.Component {
     password: "",
     repeatPassword: "",
     submitting: false,
-    errors: {}
+    errors: {},
   };
 
-  onChange = e => {
+  onChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       [name]: value,
       errors: {
         ...prevState.errors,
         base: null,
-        [name]: null
-      }
+        [name]: null,
+      },
     }));
   };
 
@@ -29,11 +29,11 @@ class LoginForm extends React.Component {
     console.log("on blur");
     const errors = this.validateFields();
     if (Object.keys(errors).length > 0) {
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         errors: {
           ...prevState.errors,
-          ...errors
-        }
+          ...errors,
+        },
       }));
     }
   };
@@ -56,7 +56,7 @@ class LoginForm extends React.Component {
   onSubmit = async () => {
     try {
       this.setState({
-        submitting: true
+        submitting: true,
       });
       const data = await CallApi.get(`/authentication/token/new`);
 
@@ -66,42 +66,41 @@ class LoginForm extends React.Component {
           body: {
             username: this.state.username,
             password: this.state.password,
-            request_token: data.request_token
-          }
+            request_token: data.request_token,
+          },
         }
       );
       const { session_id } = await CallApi.post(`/authentication/session/new`, {
         body: {
-          request_token: result.request_token
-        }
+          request_token: result.request_token,
+        },
       });
 
       const user = await CallApi.get(`/account`, {
         params: {
-          session_id: session_id
-        }
+          session_id: session_id,
+        },
       });
 
       this.setState(
         {
-          submitting: false
+          submitting: false,
         },
         () => {
-          //this.props.updateSessionId(session_id);
-          this.props.updateUser(user, session_id);
+          this.props.updateAuth(user, session_id);
         }
       );
       this.props.toggleLoginForm();
 
       const queryStringParams = {
         session_id,
-        language: "ru-RU"
+        language: "ru-RU",
       };
 
       const favoriteMovies = await CallApi.get(
         `/account/${user.id}/favorite/movies`,
         {
-          params: queryStringParams
+          params: queryStringParams,
         }
       );
 
@@ -111,7 +110,7 @@ class LoginForm extends React.Component {
       const watchList = await CallApi.get(
         `/account/${user.id}/watchlist/movies`,
         {
-          params: queryStringParams
+          params: queryStringParams,
         }
       );
 
@@ -121,30 +120,30 @@ class LoginForm extends React.Component {
       this.setState({
         submitting: false,
         errors: {
-          base: error.status_message
-        }
+          base: error.status_message,
+        },
       });
     }
   };
 
-  onLogin = e => {
+  onLogin = (e) => {
     e.preventDefault();
     const errors = this.validateFields();
     if (Object.keys(errors).length > 0) {
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         errors: {
           ...prevState.errors,
-          ...errors
-        }
+          ...errors,
+        },
       }));
     } else {
       this.onSubmit();
     }
   };
 
-  getClassForInput = key => {
+  getClassForInput = (key) => {
     return classNames("form-control", {
-      invalid: this.state.errors[key]
+      invalid: this.state.errors[key],
     });
   };
 
